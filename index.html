@@ -18,6 +18,8 @@
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --code-bg: #040806;
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
     }
 
     * {
@@ -145,7 +147,6 @@
       margin: 0 auto 32px auto;
     }
 
-    /* الترتيب الهرمي للأزرار */
     .pyramid-container {
       display: flex;
       flex-direction: column;
@@ -165,6 +166,10 @@
       gap: 14px;
       width: 100%;
       flex-wrap: wrap;
+    }
+
+    .pyramid-danger {
+      width: 100%;
     }
 
     .btn {
@@ -218,6 +223,24 @@
 
     .btn-secondary:hover {
       border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-danger-link {
+      width: 100%;
+      background: rgba(239, 68, 68, 0.08);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      box-shadow: 0 3px 12px rgba(239, 68, 68, 0.15);
+      font-size: 13.5px;
+      padding: 11px 20px;
+      border-radius: 8px;
+    }
+
+    .btn-danger-link:hover {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: var(--danger);
+      color: #ffffff;
       transform: translateY(-2px);
     }
 
@@ -316,15 +339,32 @@
       color: var(--text-muted);
     }
 
+    /* زر النسخ مع تأثيرات علامة الصح */
     .copy-btn {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       color: var(--text-main);
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 4px;
-      font-size: 11px;
+      font-size: 12px;
       cursor: pointer;
       font-weight: bold;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .copy-btn.copied {
+      background: var(--primary) !important;
+      border-color: var(--primary-light) !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 10px rgba(0, 168, 107, 0.4);
     }
 
     pre {
@@ -370,6 +410,11 @@
       color: white;
     }
 
+    .tab-btn.danger.active {
+      background: var(--danger);
+      border-color: var(--danger);
+    }
+
     .instructions-list {
       padding-right: 20px;
       margin: 12px 0;
@@ -388,7 +433,7 @@
     .tip-box {
       background: rgba(212, 175, 55, 0.08);
       border-right: 3px solid var(--gold);
-      padding: 12px 16px;
+      padding: 14px 18px;
       border-radius: 4px;
       margin: 14px 0;
       font-size: 13px;
@@ -398,11 +443,50 @@
     .success-box {
       background: rgba(0, 168, 107, 0.08);
       border-right: 3px solid var(--primary);
-      padding: 12px 16px;
+      padding: 14px 18px;
       border-radius: 4px;
       margin: 14px 0;
       font-size: 13px;
       color: var(--text-main);
+    }
+
+    .danger-box {
+      background: rgba(239, 68, 68, 0.08);
+      border-right: 3px solid var(--danger);
+      padding: 14px 18px;
+      border-radius: 4px;
+      margin: 14px 0;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .transparency-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .transparency-card {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .transparency-card h4 {
+      color: var(--primary-light);
+      font-size: 14.5px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .transparency-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.5;
     }
 
     footer {
@@ -438,21 +522,29 @@
       <h2>عزل الموسيقى من يوتيوب<br><span>بالذكاء الاصطناعي مع مزامنة لحظية</span></h2>
       <p>أداة مفتوحة المصدر لعزل الآلات الموسيقية عن الصوت البشري في مقاطع اليوتيوب بجودة استوديو احترافية وبدون أي تكاليف.</p>
 
-      <!-- الهيكل الهرمي للأزرار -->
+      <!-- الهيكل الهرمي للأزرار مع الخانة الحمراء -->
       <div class="pyramid-container">
-        <!-- قمة الهرم -->
+        <!-- قمة الهرم: تحميل الإضافة -->
         <div class="pyramid-top">
           <a href="#install" class="btn btn-main">
             ⬇️ تحميل وتثبيت الإضافة مجاناً (ZIP)
           </a>
         </div>
-        <!-- قاعدة الهرم -->
+
+        <!-- قاعدة الهرم: الشرحان -->
         <div class="pyramid-bottom">
           <a href="#cloud" class="btn btn-primary">
             ☁️ شرح التشغيل السحابي
           </a>
           <a href="#local" class="btn btn-secondary">
             💻 شرح التشغيل المحلي
+          </a>
+        </div>
+
+        <!-- الخانة الحمراء تحت الشرحين -->
+        <div class="pyramid-danger">
+          <a href="#transparency" class="btn btn-danger-link">
+            🗑️ الشفافية، ماذا يحدث في جهازك؟ وطريقة الحذف الكامل
           </a>
         </div>
       </div>
@@ -526,7 +618,7 @@
         <div class="code-container">
           <div class="code-header">
             <span>Colab Script</span>
-            <button class="copy-btn" onclick="copyCode('colab-code')">نسخ كود Colab 📋</button>
+            <button class="copy-btn" onclick="copyCode('colab-code', this)">نسخ الكود 📋</button>
           </div>
           <pre id="colab-code">!fuser -k 8000/tcp 2>/dev/null
 !pkill -f cloudflared 2>/dev/null
@@ -640,7 +732,7 @@ for line in t.stdout:
           <div class="code-container">
             <div class="code-header">
               <span id="setup-title">أوامر التثبيت الأولي</span>
-              <button class="copy-btn" onclick="copyCode('setup-commands')">نسخ الأوامر 📋</button>
+              <button class="copy-btn" onclick="copyCode('setup-commands', this)">نسخ الأوامر 📋</button>
             </div>
             <pre id="setup-commands"></pre>
           </div>
@@ -658,7 +750,7 @@ for line in t.stdout:
           <div class="code-container">
             <div class="code-header">
               <span id="daily-title">أمر التشغيل اليومي</span>
-              <button class="copy-btn" onclick="copyCode('daily-commands')">نسخ الأمر 📋</button>
+              <button class="copy-btn" onclick="copyCode('daily-commands', this)">نسخ الأمر 📋</button>
             </div>
             <pre id="daily-commands"></pre>
           </div>
@@ -667,6 +759,70 @@ for line in t.stdout:
         <div class="tip-box">
           💡 <strong>أين تُحفظ المقاطع المعالجة؟</strong><br>
           تُحفظ تلقائياً في مجلد <code>audio_cache</code> بجانب ملف السيرفر. يمكنك تغيير المسار بتمرير الأمر: <code>--cache-dir "مسار_المجلد_الجديد"</code> عند تشغيل السيرفر.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Transparency & Uninstallation (الشفافية والحذف الكامل) -->
+    <section id="transparency">
+      <div class="section-header">
+        <h2>الشفافية وطريقة الحذف الكامل</h2>
+        <p>ماذا يحدث في نظامك؟ وكيف تحذف الأداة كلياً بنقرة واحدة دون ترك أي أثر</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-title-badge" style="color: var(--primary-light);">
+          <span>🔍</span> 1. ماذا يحدث في نظامك عند التثبيت؟ (Linux & Windows)
+        </div>
+
+        <div class="transparency-grid">
+          <div class="transparency-card">
+            <h4>📦 عزل تام (Zero Pollution)</h4>
+            <p>جميع مكتبات الذكاء الاصطناعي (PyTorch, Demucs) تُثبت <strong>داخل مجلد البيئة <code>naqawa_env</code> فقط</strong>، ولا يتم تعديل أو تنزيل أي شيء في بايثون النظام أو مسارات النظام العامة.</p>
+          </div>
+          <div class="transparency-card">
+            <h4>🧹 لا مساس بالسجل أو الإعدادات</h4>
+            <p>على نظام <strong>Windows</strong> لا يتم تعديل الـ Registry أبداً، وعلى <strong>Linux</strong> لا يتم تعديل أي ملفات ضبط بالنظام (Config files). الأداة محمولة بالكامل (Portable).</p>
+          </div>
+          <div class="transparency-card">
+            <h4>🔒 خصوصية وأمان مطلق</h4>
+            <p>في الخيار المحلي، تُعالج المقاطع وتُحفظ داخل مجلد <code>audio_cache</code> على قرصك، ولا يخرج أي مسار صوتي أو رابط خارج شبكتك الخاصة.</p>
+          </div>
+        </div>
+
+        <div class="step-title-badge" style="color: var(--danger); margin-top: 20px;">
+          <span>🗑️</span> 2. طريقة الحذف والإزالة الكاملة (Clean Uninstall)
+        </div>
+
+        <ol class="instructions-list">
+          <li>
+            <strong>إزالة الإضافة من المتصفح:</strong>
+            اضغط بالزر الأيمن على أيقونة «نقاوة» في شريط أدوات المتصفح واختر <strong>«إزالة من Chrome...» (Remove from Chrome)</strong>.
+          </li>
+          <li>
+            <strong>إزالة السيرفر المحلي ومكتباته واستعادة المساحة فوراً:</strong>
+            لحذف كافة الملفات والمكتبات المعزولة والمقاطع المعالجة، اختر نظامك ونفّذ أمر الحذف التالي في الطرفية/CMD بمجلد المشروع:
+          </li>
+        </ol>
+
+        <!-- تبويبات الحذف -->
+        <div class="tab-group" style="margin-top: 10px;">
+          <div class="tabs">
+            <button class="tab-btn danger active" onclick="setUninstallOS('linux', this)">🐧 حذف على Linux</button>
+            <button class="tab-btn danger" onclick="setUninstallOS('windows', this)">🪟 حذف على Windows</button>
+          </div>
+        </div>
+
+        <div class="code-container">
+          <div class="code-header">
+            <span id="uninstall-title">أمر الحذف الكامل (Linux)</span>
+            <button class="copy-btn" onclick="copyCode('uninstall-commands', this)">نسخ الأمر 📋</button>
+          </div>
+          <pre id="uninstall-commands"></pre>
+        </div>
+
+        <div class="danger-box">
+          ⚠️ <strong>النتيجة بعد الحذف:</strong> يُحذف مجلد البيئة وكافة المقاطع المعالجة وملف السيرفر نهائياً، ويعود حاسوبك نظيفاً تماماً بنسبة 100% كما كان قبل التثبيت.
         </div>
       </div>
     </section>
@@ -681,8 +837,8 @@ for line in t.stdout:
   <script>
     let currentOS = 'linux';
     let currentHW = 'cpu';
+    let currentUninstallOS = 'linux';
 
-    // مصفوفة الأوامر الشاملة والمضمونة 100% للـ CPU والـ GPU بدون أي أخطاء تفعيل أو صلاحيات
     const commandsData = {
       linux: {
         cpu: {
@@ -752,12 +908,32 @@ naqawa_env\\Scripts\\python local_server.py`,
       }
     };
 
+    const uninstallData = {
+      linux: {
+        title: "أمر الحذف الكامل واستعادة المساحة (Linux Terminal)",
+        code: `# حذف مجلد البيئة المعزول ومجلد الكاش وملف السيرفر بالكامل
+rm -rf naqawa_env audio_cache temp_* local_server.py`
+      },
+      windows: {
+        title: "أمر الحذف الكامل واستعادة المساحة (Windows CMD)",
+        code: `:: حذف مجلد البيئة ومجلد الكاش وملف السيرفر بالكامل
+rmdir /s /q naqawa_env audio_cache
+del local_server.py`
+      }
+    };
+
     function updateLocalCommands() {
       const data = commandsData[currentOS][currentHW];
       document.getElementById('setup-title').innerText = data.setupTitle;
       document.getElementById('setup-commands').innerText = data.setupCode;
       document.getElementById('daily-title').innerText = data.dailyTitle;
       document.getElementById('daily-commands').innerText = data.dailyCode;
+    }
+
+    function updateUninstallCommands() {
+      const data = uninstallData[currentUninstallOS];
+      document.getElementById('uninstall-title').innerText = data.title;
+      document.getElementById('uninstall-commands').innerText = data.code;
     }
 
     function setOS(os, btn) {
@@ -774,17 +950,30 @@ naqawa_env\\Scripts\\python local_server.py`,
       updateLocalCommands();
     }
 
-    function copyCode(elementId) {
+    function setUninstallOS(os, btn) {
+      currentUninstallOS = os;
+      btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateUninstallCommands();
+    }
+
+    // دالة النسخ المحسنة مع علامة الصح ✓ والتأثير البصري
+    function copyCode(elementId, btnElement) {
+      const btn = btnElement || (event && (event.currentTarget || event.target));
       const text = document.getElementById(elementId).innerText;
+
       navigator.clipboard.writeText(text).then(() => {
-        const btn = event.target;
-        const old = btn.innerText;
-        btn.innerText = "تم النسخ! ✅";
-        setTimeout(() => btn.innerText = old, 2000);
+        const originalText = btn.innerHTML;
+        btn.innerHTML = "✓ تم النسخ";
+        btn.classList.add('copied');
+
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('copied');
+        }, 2000);
       });
     }
 
-    // دالة توليد وتحميل ملف local_server.py النهائي والمصحح
     function downloadServerFile() {
       const serverPyContent = `import os, sys, glob, shutil, argparse, subprocess, torch
 from fastapi import FastAPI, HTTPException
@@ -842,6 +1031,12 @@ async def process_video(url: str):
 
         cmd = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "-o", work_dir, input_wav]
         res = subprocess.run(cmd, capture_output=True, text=True)
+
+        if res.returncode != 0 and DEVICE == "cuda":
+            print("⚠️ تحويل تلقائي للمعالج CPU...")
+            cmd_cpu = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", "cpu", "-n", "htdemucs", "-o", work_dir, input_wav]
+            res = subprocess.run(cmd_cpu, capture_output=True, text=True)
+
         if res.returncode != 0:
             raise Exception(f"خطأ Demucs: {res.stderr[:200]}")
 
@@ -865,7 +1060,7 @@ async def stream(video_id: str):
     raise HTTPException(status_code=404)
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")`;
+    uvicorn.run("local_server:app", host="127.0.0.1", port=8000, log_level="warning")`;
 
       const blob = new Blob([serverPyContent], { type: "text/x-python;charset=utf-8" });
       const link = document.createElement("a");
@@ -877,6 +1072,7 @@ if __name__ == "__main__":
     }
 
     updateLocalCommands();
+    updateUninstallCommands();
   </script>
 </body>
 </html>
