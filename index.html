@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نقاوة | Naqawa - عزل الموسيقى بالذكاء الاصطناعي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070c0a;
+      --card-bg: #0e1714;
+      --card-border: #1a2a24;
+      --primary: #00a86b;
+      --primary-light: #00d688;
+      --gold: #d4af37;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --code-bg: #040806;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Tajawal', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.7;
+    }
+
+    code, pre {
+      font-family: 'Fira Code', monospace;
+      direction: ltr;
+      text-align: left;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header بسيط ونظيف بدون روابط مكررة */
+    header {
+      padding: 18px 0;
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      background: rgba(7, 12, 10, 0.9);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+    }
+
+    .nav-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .logo-badge {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--primary), var(--gold));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 22px;
+      color: #000;
+    }
+
+    .logo-text h1 {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--gold);
+    }
+
+    .hero {
+      padding: 60px 0 45px 0;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(0, 168, 107, 0.1);
+      border: 1px solid var(--primary);
+      border-radius: 30px;
+      color: var(--primary-light);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    .hero h2 {
+      font-size: 38px;
+      font-weight: 900;
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+
+    .hero h2 span {
+      background: linear-gradient(135deg, var(--primary-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 650px;
+      margin: 0 auto 32px auto;
+    }
+
+    /* الترتيب الهرمي للأزرار */
+    .pyramid-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    .pyramid-top {
+      width: 100%;
+    }
+
+    .pyramid-bottom {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14.5px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-main {
+      width: 100%;
+      padding: 15px 28px;
+      font-size: 16px;
+    }
+
+    .btn-chrome {
+      background: #ffffff;
+      color: #0d1412;
+      box-shadow: 0 4px 18px rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-chrome:hover {
+      background: #f1f5f9;
+      transform: translateY(-2px);
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(0, 168, 107, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      flex: 1;
+      background: var(--card-bg);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-download {
+      background: linear-gradient(135deg, var(--gold), #b8972e);
+      color: #000;
+      font-weight: 800;
+      padding: 12px 26px;
+    }
+
+    .btn-download:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin: 40px 0 70px 0;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 22px;
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    section {
+      padding: 50px 0;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .section-header h2 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+    }
+
+    .step-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 25px;
+    }
+
+    .step-title-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--gold);
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .code-container {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      margin: 14px 0;
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 1px solid var(--card-border);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .copy-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    pre {
+      padding: 14px;
+      overflow-x: auto;
+      font-size: 13px;
+      color: #38bdf8;
+      line-height: 1.6;
+    }
+
+    .tab-group {
+      margin-bottom: 18px;
+    }
+
+    .tab-label {
+      font-size: 13px;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .instructions-list {
+      padding-right: 20px;
+      margin: 12px 0;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .instructions-list li {
+      margin-bottom: 8px;
+    }
+
+    .instructions-list strong {
+      color: var(--text-main);
+    }
+
+    .tip-box {
+      background: rgba(212, 175, 55, 0.08);
+      border-right: 3px solid var(--gold);
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin: 14px 0;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .success-box {
+      background: rgba(0, 168, 107, 0.08);
+      border-right: 3px solid var(--primary);
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin: 14px 0;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    footer {
+      padding: 35px 0;
+      border-top: 1px solid var(--card-border);
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header مبسط بدون روابط مكررة -->
+  <header>
+    <div class="container nav-content">
+      <a href="#" class="logo-area">
+        <div class="logo-badge">ن</div>
+        <div class="logo-text">
+          <h1>نقاوة | Naqawa</h1>
+        </div>
+      </a>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Hero Section مع الترتيب الهرمي للأزرار -->
+    <section class="hero">
+      <div class="hero-badge">متاح مجاناً للجميع ✨</div>
+      <h2>عزل الموسيقى من يوتيوب<br><span>بالذكاء الاصطناعي مع مزامنة لحظية</span></h2>
+      <p>أداة مفتوحة المصدر لعزل الآلات الموسيقية والضجيج عن الصوت البشري في مقاطع اليوتيوب بجودة استوديو احترافية.</p>
+
+      <!-- الهيكل الهرمي للأزرار -->
+      <div class="pyramid-container">
+        <!-- قمة الهرم: تثبيت الإضافة -->
+        <div class="pyramid-top">
+          <a href="https://chrome.google.com/webstore" target="_blank" class="btn btn-chrome btn-main">
+            🛍️ تثبيت الإضافة من سوق Chrome الإلكتروني
+          </a>
+        </div>
+        <!-- قاعدة الهرم: سحابي يمين ومحلي يسار -->
+        <div class="pyramid-bottom">
+          <a href="#cloud" class="btn btn-primary">
+            ☁️ شرح التشغيل السحابي
+          </a>
+          <a href="#local" class="btn btn-secondary">
+            💻 شرح التشغيل المحلي
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- مميزات الإضافة -->
+    <div class="features">
+      <div class="feature-card">
+        <h3>⚡ مزامنة تامة 100%</h3>
+        <p>نظام Drift Guard يضمن تطابق حركة الشفاه والصوت حتى عند التقديم وتغيير السرعات.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🧠 Demucs v4 AI</h3>
+        <p>يعتمد على أحدث خوارزميات الذكاء الاصطناعي لفصل الترددات بدقة متناهية.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🔒 خصوصية وسرعة مطلقة</h3>
+        <p>خيارات متعددة: تشغيل سحابي مجاني على كروت Tesla T4 أو تشغيل محلي دون إرسال بيانات.</p>
+      </div>
+    </div>
+
+    <!-- Section 1: Cloud Mode -->
+    <section id="cloud">
+      <div class="section-header">
+        <h2>شرح التشغيل السحابي (Google Colab)</h2>
+        <p>استخدم كرت شاشة سحابي مجاني (Tesla T4) بدون استهلاك موارد جهازك</p>
+      </div>
+
+      <div class="step-card">
+        <ol class="instructions-list">
+          <li>افتح موقع <a href="https://colab.research.google.com" target="_blank" style="color: var(--primary-light);">Google Colab</a> وسجّل الدخول بحسابك.</li>
+          <li>اضغط على <strong>New notebook</strong> (دفتر ملاحظات جديد).</li>
+          <li>من القائمة العلوية اضغط على <strong>Edit</strong> ثم اختر <strong>Notebook settings</strong>.</li>
+          <li>من خانة <em>Hardware accelerator</em>، اختر <strong>T4 GPU</strong> ثم اضغط <strong>Save</strong>.</li>
+          <li>الصق كود السيرفر أدناه في الخلية واضغط على زر التشغيل <strong>Run ▶️</strong>:</li>
+        </ol>
+
+        <div class="code-container">
+          <div class="code-header">
+            <span>Colab Script</span>
+            <button class="copy-btn" onclick="copyCode('colab-code')">نسخ كود Colab 📋</button>
+          </div>
+          <pre id="colab-code">!fuser -k 8000/tcp 2>/dev/null
+!pkill -f cloudflared 2>/dev/null
+!apt-get update -qq && apt-get install -y -qq ffmpeg git
+!pip install -q -U --no-cache-dir yt-dlp demucs soundfile scipy fastapi uvicorn
+!wget -q -nc https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+!dpkg -i cloudflared-linux-amd64.deb
+
+import os, glob, shutil, subprocess, threading, time, re
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
+import uvicorn, yt_dlp
+
+app = FastAPI()
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+
+CACHE_DIR = "/content/audio_cache"
+os.makedirs(CACHE_DIR, exist_ok=True)
+YTDL_OPTS = {'quiet': True, 'extractor_args': {'youtube': {'player_client': ['android', 'ios', 'mweb'], 'player_skip': ['webpage', 'configs']}}}
+
+@app.get("/process")
+@app.post("/process")
+async def process_video(url: str):
+    with yt_dlp.YoutubeDL(YTDL_OPTS) as ydl:
+        video_id = ydl.extract_info(url, download=False).get("id")
+    cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
+    if os.path.exists(cached_file): return {"status": "ready", "video_id": video_id}
+    work_dir = f"/content/work_{video_id}"
+    os.makedirs(work_dir, exist_ok=True)
+    try:
+        raw_tmpl = os.path.join(work_dir, "raw.%(ext)s")
+        with yt_dlp.YoutubeDL({**YTDL_OPTS, 'format': 'bestaudio/best', 'outtmpl': raw_tmpl}) as ydl: ydl.download([url])
+        raw_file = glob.glob(os.path.join(work_dir, "raw.*"))[0]
+        input_wav = os.path.join(work_dir, "input.wav")
+        subprocess.run(["ffmpeg", "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
+        subprocess.run(["demucs", "--two-stems", "vocals", "-d", "cuda", "-n", "htdemucs", "-o", work_dir, input_wav], check=True)
+        vocals = os.path.join(work_dir, "htdemucs", "input", "vocals.wav")
+        subprocess.run(["ffmpeg", "-y", "-i", vocals, "-b:a", "192k", cached_file], check=True)
+        shutil.rmtree(work_dir, ignore_errors=True)
+        return {"status": "ready", "video_id": video_id}
+    except Exception as e:
+        shutil.rmtree(work_dir, ignore_errors=True)
+        return JSONResponse(status_code=500, content={"detail": str(e)})
+
+@app.get("/audio/{video_id}")
+async def stream(video_id: str):
+    file_path = os.path.join(CACHE_DIR, f"{video_id}.mp3")
+    if os.path.exists(file_path): return FileResponse(file_path, media_type="audio/mpeg")
+    raise HTTPException(status_code=404)
+
+threading.Thread(target=lambda: uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning"), daemon=True).start()
+time.sleep(2)
+t = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://127.0.0.1:8000"], stdout=subprocess.PIPE, text=True)
+for line in t.stdout:
+    m = re.search(r'https://[a-zA-Z0-9-]+\.trycloudflare\.com', line)
+    if m: print("\n🔥 رابط السيرفر:\n" + m.group(0)); break</pre>
+        </div>
+        <p style="font-size: 13.5px; color: var(--text-muted);">انسخ الرابط الذي يظهر في الخلية وضعه داخل الإضافة في خيار <strong>[☁️ السحابة (Colab)]</strong>.</p>
+      </div>
+    </section>
+
+    <!-- Section 2: Local Mode -->
+    <section id="local">
+      <div class="section-header">
+        <h2>شرح التشغيل المحلي (على حاسوبك)</h2>
+        <p>شغّل المعالجة محلياً عبر معالجك (CPU) أو كرت الشاشة (NVIDIA GPU)</p>
+      </div>
+
+      <div class="step-card">
+        <!-- 1. تحميل الملف -->
+        <div style="text-align: center; margin-bottom: 25px; padding: 20px; background: rgba(0, 168, 107, 0.05); border-radius: 8px; border: 1px dashed var(--primary);">
+          <h3 style="font-size: 16px; margin-bottom: 10px; color: var(--gold);">الخطوة 1: تحميل ملف السيرفر المحلي جاهزاً</h3>
+          <button class="btn btn-download" onclick="downloadServerFile()">
+            ⬇️ تحميل ملف local_server.py بنقرة واحدة
+          </button>
+        </div>
+
+        <!-- محددات النظام والعتاد -->
+        <div class="tab-group">
+          <span class="tab-label">حدد نظام التشغيل لديك:</span>
+          <div class="tabs">
+            <button class="tab-btn active" onclick="setOS('linux', this)">🐧 Linux (Ubuntu / Arch / CachyOS)</button>
+            <button class="tab-btn" onclick="setOS('windows', this)">🪟 Windows (10 / 11)</button>
+          </div>
+        </div>
+
+        <div class="tab-group">
+          <span class="tab-label">حدد جهاز المعالجة في حاسوبك:</span>
+          <div class="tabs">
+            <button class="tab-btn active" onclick="setHardware('cpu', this)">💻 المعالج (CPU) - مضمون لجميع الحواسيب</button>
+            <button class="tab-btn" onclick="setHardware('gpu', this)">⚡ كرت شاشة NVIDIA (CUDA GPU)</button>
+          </div>
+        </div>
+
+        <!-- 2. التثبيت لأول مرة فقط -->
+        <div style="margin-top: 25px;">
+          <div class="step-title-badge">
+            <span>⚙️</span> الخطوة 2: التثبيت الأولي (يتم تنفيذه لمرة واحدة فقط)
+          </div>
+          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px;">افتح موجه الأوامر (CMD أو Terminal) في المجلد الذي حمّلت فيه الملف، ونفّذ الأوامر التالية بالترتيب:</p>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span id="setup-title">أوامر التثبيت الأولي</span>
+              <button class="copy-btn" onclick="copyCode('setup-commands')">نسخ الأوامر 📋</button>
+            </div>
+            <pre id="setup-commands"></pre>
+          </div>
+        </div>
+
+        <!-- 3. طريقة الاستخدام اليومية الروتينية -->
+        <div style="margin-top: 30px;">
+          <div class="step-title-badge" style="color: var(--primary-light);">
+            <span>🚀</span> الخطوة 3: طريقة الاستخدام اليومية (كلما أردت استخدام الإضافة)
+          </div>
+          <div class="success-box">
+            ✅ <strong>لن تحتاج لتثبيت أي شيء مجدداً!</strong> في كل مرة تفتح فيها حاسوبك وتريد عزل الموسيقى، اكتب فقط هذين السطرين لتشغيل السيرفر:
+          </div>
+
+          <div class="code-container">
+            <div class="code-header">
+              <span id="daily-title">أمر التشغيل اليومي</span>
+              <button class="copy-btn" onclick="copyCode('daily-commands')">نسخ الأمر 📋</button>
+            </div>
+            <pre id="daily-commands"></pre>
+          </div>
+        </div>
+
+        <div class="tip-box">
+          💡 <strong>أين تُحفظ المقاطع المعالجة؟</strong><br>
+          تُحفظ تلقائياً في مجلد <code>audio_cache</code> بجانب ملف السيرفر. يمكنك تغيير المسار بتمرير الأمر: <code>--cache-dir "مسار_المجلد_الجديد"</code> عند تشغيل السيرفر.
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>مشروع <strong>نقاوة (Naqawa)</strong> مفتوح المصدر بالكامل لخدمة الجميع 🎧</p>
+    </div>
+  </footer>
+
+  <script>
+    let currentOS = 'linux';
+    let currentHW = 'cpu';
+
+    const commandsData = {
+      linux: {
+        cpu: {
+          setupTitle: "أوامر التثبيت الأولي (Linux + CPU)",
+          setupCode: `# 1. تثبيت FFmpeg
+sudo pacman -S --needed ffmpeg || sudo apt install -y ffmpeg
+
+# 2. إنشاء بيئة العمل الافتراضية وتفعيلها
+python3 -m venv naqawa_env
+source naqawa_env/bin/activate
+# (إذا كنت تستخدم fish shell اكتب: source naqawa_env/bin/activate.fish)
+
+# 3. تثبيت المتطلبات للمعالج CPU
+pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip install fastapi uvicorn yt-dlp demucs soundfile scipy
+
+# 4. تشغيل السيرفر
+python local_server.py`,
+          dailyTitle: "أمر التشغيل اليومي (Linux)",
+          dailyCode: `source naqawa_env/bin/activate
+python local_server.py
+
+# لمستخدمي fish shell:
+# source naqawa_env/bin/activate.fish
+# python local_server.py`
+        },
+        gpu: {
+          setupTitle: "أوامر التثبيت الأولي (Linux + NVIDIA GPU CUDA)",
+          setupCode: `# 1. تثبيت FFmpeg
+sudo pacman -S --needed ffmpeg || sudo apt install -y ffmpeg
+
+# 2. إنشاء البيئة وتفعيلها
+python3 -m venv naqawa_env
+source naqawa_env/bin/activate
+
+# 3. تثبيت PyTorch الداعم لـ CUDA كروت إنفيديا
+pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install fastapi uvicorn yt-dlp demucs soundfile scipy
+
+# 4. تشغيل السيرفر على كرت الشاشة
+python local_server.py`,
+          dailyTitle: "أمر التشغيل اليومي (Linux)",
+          dailyCode: `source naqawa_env/bin/activate
+python local_server.py`
+        }
+      },
+      windows: {
+        cpu: {
+          setupTitle: "أوامر التثبيت الأولي (Windows + CPU)",
+          setupCode: `:: 1. إنشاء البيئة الافتراضية
+python -m venv naqawa_env
+
+:: 2. تفعيل البيئة
+naqawa_env\\Scripts\\activate
+
+:: 3. تثبيت المتطلبات للمعالج CPU
+pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip install fastapi uvicorn yt-dlp demucs soundfile scipy
+
+:: 4. تشغيل السيرفر
+python local_server.py`,
+          dailyTitle: "أمر التشغيل اليومي (Windows)",
+          dailyCode: `naqawa_env\\Scripts\\activate
+python local_server.py`
+        },
+        gpu: {
+          setupTitle: "أوامر التثبيت الأولي (Windows + NVIDIA GPU CUDA)",
+          setupCode: `:: 1. إنشاء البيئة الافتراضية
+python -m venv naqawa_env
+
+:: 2. تفعيل البيئة
+naqawa_env\\Scripts\\activate
+
+:: 3. تثبيت المتطلبات الداعمة لكرت الشاشة CUDA
+pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
+pip install fastapi uvicorn yt-dlp demucs soundfile scipy
+
+:: 4. تشغيل السيرفر على كرت الشاشة
+python local_server.py`,
+          dailyTitle: "أمر التشغيل اليومي (Windows)",
+          dailyCode: `naqawa_env\\Scripts\\activate
+python local_server.py`
+        }
+      }
+    };
+
+    function updateLocalCommands() {
+      const data = commandsData[currentOS][currentHW];
+      document.getElementById('setup-title').innerText = data.setupTitle;
+      document.getElementById('setup-commands').innerText = data.setupCode;
+      document.getElementById('daily-title').innerText = data.dailyTitle;
+      document.getElementById('daily-commands').innerText = data.dailyCode;
+    }
+
+    function setOS(os, btn) {
+      currentOS = os;
+      btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateLocalCommands();
+    }
+
+    function setHardware(hw, btn) {
+      currentHW = hw;
+      btn.parentElement.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateLocalCommands();
+    }
+
+    function copyCode(elementId) {
+      const text = document.getElementById(elementId).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = event.target;
+        const old = btn.innerText;
+        btn.innerText = "تم النسخ! ✅";
+        setTimeout(() => btn.innerText = old, 2000);
+      });
+    }
+
+    function downloadServerFile() {
+      const serverPyContent = `import os, sys, glob, shutil, argparse, subprocess, torch
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse
+import uvicorn, yt_dlp
+
+DEFAULT_CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "audio_cache")
+parser = argparse.ArgumentParser(description="Naqawa Local Engine")
+parser.add_argument("--cache-dir", type=str, default=DEFAULT_CACHE_DIR, help="مسار حفظ الصوت")
+args, _ = parser.parse_known_args()
+
+CACHE_DIR = os.path.abspath(args.cache_dir)
+os.makedirs(CACHE_DIR, exist_ok=True)
+DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+
+print("="*60)
+print(f"🔥 تم تشغيل محرك نقاوة المحلي | المعالجة عبر: [{DEVICE.upper()}]")
+print(f"📁 مجلد الحفظ: {CACHE_DIR}")
+print("="*60)
+
+app = FastAPI()
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+
+YTDL_OPTS = {'quiet': True, 'no_warnings': True, 'extractor_args': {'youtube': {'player_client': ['android', 'ios', 'mweb'], 'player_skip': ['webpage', 'configs']}}}
+
+@app.get("/")
+def health(): return {"status": "online", "mode": "local", "device": DEVICE, "cache_dir": CACHE_DIR}
+
+@app.get("/process")
+@app.post("/process")
+async def process_video(url: str):
+    print(f"\\n🚀 [طلب محلي]: {url}")
+    try:
+        with yt_dlp.YoutubeDL(YTDL_OPTS) as ydl:
+            info = ydl.extract_info(url, download=False)
+            video_id = info.get("id")
+    except Exception as e:
+        return JSONResponse(status_code=400, content={"detail": f"خطأ يوتيوب: {str(e)}"})
+
+    cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
+    if os.path.exists(cached_file):
+        return {"status": "ready", "video_id": video_id}
+
+    work_dir = os.path.join(os.path.dirname(CACHE_DIR), f"temp_{video_id}")
+    os.makedirs(work_dir, exist_ok=True)
+    try:
+        raw_tmpl = os.path.join(work_dir, "raw.%(ext)s")
+        with yt_dlp.YoutubeDL({**YTDL_OPTS, 'format': 'bestaudio/best', 'outtmpl': raw_tmpl}) as ydl: ydl.download([url])
+        raw_file = glob.glob(os.path.join(work_dir, "raw.*"))[0]
+        input_wav = os.path.join(work_dir, "input.wav")
+        subprocess.run(["ffmpeg", "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
+        subprocess.run(["demucs", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "-o", work_dir, input_wav], check=True)
+        vocals = os.path.join(work_dir, "htdemucs", "input", "vocals.wav")
+        subprocess.run(["ffmpeg", "-y", "-i", vocals, "-b:a", "192k", cached_file], check=True)
+        shutil.rmtree(work_dir, ignore_errors=True)
+        return {"status": "ready", "video_id": video_id}
+    except Exception as e:
+        shutil.rmtree(work_dir, ignore_errors=True)
+        return JSONResponse(status_code=500, content={"detail": str(e)})
+
+@app.get("/audio/{video_id}")
+async def stream(video_id: str):
+    file_path = os.path.join(CACHE_DIR, f"{video_id}.mp3")
+    if os.path.exists(file_path): return FileResponse(file_path, media_type="audio/mpeg")
+    raise HTTPException(status_code=404)
+
+if __name__ == "__main__":
+    uvicorn.run("local_server:app", host="127.0.0.1", port=8000, reload=False)`;
+
+      const blob = new Blob([serverPyContent], { type: "text/x-python;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "local_server.py";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    updateLocalCommands();
+  </script>
+</body>
+</html>
