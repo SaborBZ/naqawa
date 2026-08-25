@@ -147,6 +147,7 @@
       margin: 0 auto 32px auto;
     }
 
+    /* الترتيب الهرمي للأزرار */
     .pyramid-container {
       display: flex;
       flex-direction: column;
@@ -521,7 +522,7 @@
       <h2>عزل الموسيقى من يوتيوب<br><span>بالذكاء الاصطناعي مع مزامنة لحظية</span></h2>
       <p>أداة مفتوحة المصدر لعزل الآلات الموسيقية عن الصوت البشري في مقاطع اليوتيوب بجودة استوديو احترافية وبدون أي تكاليف.</p>
 
-      <!-- الهيكل الهرمي للأزرار مع الخانة الحمراء -->
+      <!-- الهيكل الهرمي للأزرار -->
       <div class="pyramid-container">
         <!-- قمة الهرم: تحميل الإضافة -->
         <div class="pyramid-top">
@@ -619,72 +620,166 @@
             <span>Colab Script</span>
             <button class="copy-btn" onclick="copyCode('colab-code', this)">نسخ الكود 📋</button>
           </div>
-          <pre id="colab-code">!fuser -k 8000/tcp 2>/dev/null
+          <pre id="colab-code"># 1. إغلاق أي جلسات قديمة
+!fuser -k 8000/tcp 2>/dev/null
 !pkill -f cloudflared 2>/dev/null
-!curl -fsSL https://deno.land/install.sh | sh > /dev/null 2>&1
-!wget -q -nc -O /usr/local/bin/cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
-!chmod +x /usr/local/bin/cloudflared
-!pip install -q -U --no-cache-dir "yt-dlp[default,curl-cffi]" demucs soundfile scipy fastapi uvicorn requests
 
-import os, glob, shutil, subprocess, threading, time, re
-os.environ["PATH"] = "/root/.deno/bin:" + os.environ.get("PATH", "")
+# 2. تثبيت الحزم المطلوبة
+!apt-get update -qq && apt-get install -y -qq ffmpeg git
+!pip install -q -U --no-cache-dir yt-dlp demucs soundfile scipy fastapi uvicorn
+!wget -q -nc https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
+!dpkg -i cloudflared-linux-amd64.deb
 
+import os
+import glob
+import shutil
+import subprocess
+import threading
+import time
+import re
+import traceback
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
-import uvicorn, yt_dlp
+import uvicorn
+import yt_dlp
 
 app = FastAPI()
-app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 CACHE_DIR = "/content/audio_cache"
 os.makedirs(CACHE_DIR, exist_ok=True)
 
-def extract_video_id(url: str):
-    for p in [r'(?:v=|\/)([0-9A-Za-z_-]{11})(?:[&?]|$)', r'youtu\.be\/([0-9A-Za-z_-]{11})', r'embed\/([0-9A-Za-z_-]{11})', r'shorts\/([0-9A-Za-z_-]{11})']:
-        m = re.search(p, url)
-        if m: return m.group(1)
-    return None
+YTDL_BASE_OPTS = {
+    'quiet': True,
+    'no_warnings': True,
+    'extractor_args': {
+        'youtube': {
+            'player_client': ['android', 'ios', 'mweb'],
+            'player_skip': ['webpage', 'configs']
+        }
+    }
+}
+
+@app.get("/")
+def health():
+    return {"status": "online", "name": "Naqawa Engine", "gpu": "Tesla T4"}
 
 @app.get("/process")
 @app.post("/process")
 async def process_video(url: str):
-    video_id = extract_video_id(url)
-    if not video_id: return JSONResponse(status_code=400, content={"detail": "رابط غير صالح"})
+    print(f"\n🚀 [1/4] استلام الطلب: {url}")
+
+    try:
+        with yt_dlp.YoutubeDL(YTDL_BASE_OPTS) as ydl:
+            info = ydl.extract_info(url, download=False)
+            video_id = info.get("id")
+    except Exception as e:
+        print(f"❌ خطأ يوتيوب: {e}")
+        return JSONResponse(status_code=400, content={"detail": f"خطأ في رابط اليوتيوب: {str(e)}"})
+
     cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
-    if os.path.exists(cached_file): return {"status": "ready", "video_id": video_id}
+
+    if os.path.exists(cached_file):
+        print(f"⚡ [الكاش] المقطع {video_id} جاهز مسبقاً!")
+        return {"status": "ready", "video_id": video_id}
+
     work_dir = f"/content/work_{video_id}"
     os.makedirs(work_dir, exist_ok=True)
-    raw_template = os.path.join(work_dir, "raw_audio.%(ext)s")
+
     try:
-        ydl_opts = {'format': 'bestaudio/best', 'outtmpl': raw_template, 'quiet': True, 'impersonate': 'chrome', 'nocheckcertificate': True, 'extractor_args': {'youtube': {'player_client': ['ios', 'android', 'mweb']}}}
-        if os.path.exists("/content/cookies.txt"): ydl_opts['cookiefile'] = "/content/cookies.txt"
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl: ydl.download([f"https://www.youtube.com/watch?v={video_id}"])
-        raw_file = glob.glob(os.path.join(work_dir, "raw_audio.*"))[0]
+        print("⬇️ [2/4] جاري سحب ملف الصوت الخام...")
+        raw_template = os.path.join(work_dir, "raw_audio.%(ext)s")
+        download_opts = {
+            **YTDL_BASE_OPTS,
+            'format': 'bestaudio/best',
+            'outtmpl': raw_template,
+        }
+        with yt_dlp.YoutubeDL(download_opts) as ydl:
+            ydl.download([url])
+
+        # العثور على الملف الذي تم تنزيله أياً كان امتداده
+        downloaded = glob.glob(os.path.join(work_dir, "raw_audio.*"))
+        if not downloaded:
+            raise Exception("لم يتم العثور على ملف الصوت المحمل من يوتيوب")
+        raw_file = downloaded[0]
+
+        # تحويله إلى WAV معياري ليقرأه Demucs بأعلى سرعة
         input_wav = os.path.join(work_dir, "input.wav")
         subprocess.run(["ffmpeg", "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
-        subprocess.run(["demucs", "--two-stems", "vocals", "-d", "cuda", "-n", "htdemucs", "-o", work_dir, input_wav], check=True)
-        vocals = glob.glob(os.path.join(work_dir, "**", "vocals.wav"), recursive=True)[0]
-        subprocess.run(["ffmpeg", "-y", "-i", vocals, "-b:a", "192k", cached_file], check=True)
+
+        print("🧠 [3/4] تشغيل Demucs بالذكاء الاصطناعي على GPU...")
+        cmd = ["demucs", "--two-stems", "vocals", "-d", "cuda", "-n", "htdemucs", "-o", work_dir, input_wav]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        if res.returncode != 0:
+            print("Demucs Error:", res.stderr)
+            raise Exception(f"Demucs failed: {res.stderr[:200]}")
+
+        vocals_path = os.path.join(work_dir, "htdemucs", "input", "vocals.wav")
+        if not os.path.exists(vocals_path):
+            raise Exception("تعذر إيجاد ملف vocals.wav الناتج")
+
+        print("🎛️ [4/4] تصدير وحفظ المسار الصوتي...")
+        subprocess.run(["ffmpeg", "-y", "-i", vocals_path, "-b:a", "192k", cached_file], check=True)
+
         shutil.rmtree(work_dir, ignore_errors=True)
+        print(f"✅ تمت معالجة الفيديو بنجاح: {video_id}")
         return {"status": "ready", "video_id": video_id}
+
     except Exception as e:
+        traceback.print_exc()
         shutil.rmtree(work_dir, ignore_errors=True)
-        return JSONResponse(status_code=500, content={"detail": str(e)})
+        print(f"❌ خطأ أثناء المعالجة: {e}")
+        return JSONResponse(status_code=500, content={"detail": f"خطأ المعالجة: {str(e)}"})
 
 @app.get("/audio/{video_id}")
-async def stream(video_id: str):
+async def stream_audio(video_id: str):
     file_path = os.path.join(CACHE_DIR, f"{video_id}.mp3")
-    if os.path.exists(file_path): return FileResponse(file_path, media_type="audio/mpeg")
-    raise HTTPException(status_code=404)
+    if os.path.exists(file_path):
+        return FileResponse(file_path, media_type="audio/mpeg")
+    raise HTTPException(status_code=404, detail="الملف الصوتي غير موجود")
 
-threading.Thread(target=lambda: uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning"), daemon=True).start()
+def start_server():
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
+
+threading.Thread(target=start_server, daemon=True).start()
 time.sleep(2)
-t = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://127.0.0.1:8000"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-for line in t.stdout:
-    m = re.search(r'https://[a-zA-Z0-9-]+\.trycloudflare\.com', line)
-    if m: print("\n🔥 رابط السيرفر:\n" + m.group(0)); break</pre>
+
+print("\n🌐 جاري فتح النفق العام...")
+tunnel = subprocess.Popen(
+    ["cloudflared", "tunnel", "--url", "http://127.0.0.1:8000"],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    text=True
+)
+
+public_url = None
+for line in tunnel.stdout:
+    match = re.search(r'https://[a-zA-Z0-9-]+\.trycloudflare\.com', line)
+    if match:
+        public_url = match.group(0)
+        break
+
+print("\n" + "="*60)
+print(f"🔥 انسخ هذا الرابط وضعه في نافذة إضافة نقاوة:\n{public_url}")
+print("="*60 + "\n")</pre>
         </div>
-        <p style="font-size: 13.5px; color: var(--text-muted);">انسخ الرابط الذي يظهر في الخلية وضعه داخل الإضافة في خيار <strong>[☁️ السحابة (Colab)]</strong>.</p>
+
+        <!-- التنبيه الهام للمستخدمين -->
+        <div class="tip-box">
+          💡 <strong>ملاحظات هامة لتشغيل السحابي:</strong>
+          <ul style="margin-right: 20px; margin-top: 6px;">
+            <li><strong>إبقاء الصفحة مفتوحة:</strong> يجب إبقاء تبويب Google Colab مفتوحاً في متصفحك لكي يستمر السيرفر في العمل ومعالجة المقاطع.</li>
+            <li><strong>استخدام الرابط عدة مرات:</strong> يمكنك استخدام نفس الرابط لعدد لا نهائي من المقاطع طالما الصفحة مفتوحة دون الحاجة لإعادة تشغيل الخلية في كل مرة.</li>
+          </ul>
+        </div>
       </div>
     </section>
 
@@ -907,7 +1002,6 @@ naqawa_env\\Scripts\\python local_server.py`,
       }
     };
 
-    // أوامر الحذف الكامل شاملة __pycache__
     const uninstallData = {
       linux: {
         title: "أمر الحذف الكامل واستعادة المساحة (Linux Terminal)",
@@ -1015,6 +1109,7 @@ async def process_video(url: str):
 
     cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
     if os.path.exists(cached_file):
+        print(f"⚡ [الكاش] المقطع {video_id} معالج مسبقاً! إرسال فوري...")
         return {"status": "ready", "video_id": video_id}
 
     work_dir = os.path.join(os.path.dirname(CACHE_DIR), f"temp_{video_id}")
@@ -1058,7 +1153,7 @@ async def stream(video_id: str):
     raise HTTPException(status_code=404)
 
 if __name__ == "__main__":
-    uvicorn.run("local_server:app", host="127.0.0.1", port=8000, reload=False)`;
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")`;
 
       const blob = new Blob([serverPyContent], { type: "text/x-python;charset=utf-8" });
       const link = document.createElement("a");
