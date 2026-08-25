@@ -339,7 +339,6 @@
       color: var(--text-muted);
     }
 
-    /* زر النسخ مع تأثيرات علامة الصح */
     .copy-btn {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -801,7 +800,7 @@ for line in t.stdout:
           </li>
           <li>
             <strong>إزالة السيرفر المحلي ومكتباته واستعادة المساحة فوراً:</strong>
-            لحذف كافة الملفات والمكتبات المعزولة والمقاطع المعالجة، اختر نظامك ونفّذ أمر الحذف التالي في الطرفية/CMD بمجلد المشروع:
+            لحذف كافة الملفات والمكتبات المعزولة ومجلدات الكاش، اختر نظامك ونفّذ أمر الحذف التالي في الطرفية/CMD بمجلد المشروع:
           </li>
         </ol>
 
@@ -822,7 +821,7 @@ for line in t.stdout:
         </div>
 
         <div class="danger-box">
-          ⚠️ <strong>النتيجة بعد الحذف:</strong> يُحذف مجلد البيئة وكافة المقاطع المعالجة وملف السيرفر نهائياً، ويعود حاسوبك نظيفاً تماماً بنسبة 100% كما كان قبل التثبيت.
+          ⚠️ <strong>النتيجة بعد الحذف:</strong> يُحذف مجلد البيئة وكافة المقاطع المعالجة وملفات التخزين المؤقت وملف السيرفر نهائياً، ويعود حاسوبك نظيفاً تماماً بنسبة 100% كما كان قبل التثبيت.
         </div>
       </div>
     </section>
@@ -908,16 +907,17 @@ naqawa_env\\Scripts\\python local_server.py`,
       }
     };
 
+    // أوامر الحذف الكامل شاملة __pycache__
     const uninstallData = {
       linux: {
         title: "أمر الحذف الكامل واستعادة المساحة (Linux Terminal)",
-        code: `# حذف مجلد البيئة المعزول ومجلد الكاش وملف السيرفر بالكامل
-rm -rf naqawa_env audio_cache local_server.py`
+        code: `# حذف مجلد البيئة ومجلدات الكاش وذاكرة بايثون وملف السيرفر بالكامل
+rm -rf naqawa_env audio_cache __pycache__ temp_* local_server.py`
       },
       windows: {
         title: "أمر الحذف الكامل واستعادة المساحة (Windows CMD)",
-        code: `:: حذف مجلد البيئة ومجلد الكاش وملف السيرفر بالكامل
-rmdir /s /q naqawa_env audio_cache
+        code: `:: حذف مجلدات البيئة والكاش وذاكرة بايثون وملف السيرفر بالكامل
+rmdir /s /q naqawa_env audio_cache __pycache__
 del local_server.py`
       }
     };
@@ -957,7 +957,6 @@ del local_server.py`
       updateUninstallCommands();
     }
 
-    // دالة النسخ المحسنة مع علامة الصح ✓ والتأثير البصري
     function copyCode(elementId, btnElement) {
       const btn = btnElement || (event && (event.currentTarget || event.target));
       const text = document.getElementById(elementId).innerText;
@@ -1016,7 +1015,6 @@ async def process_video(url: str):
 
     cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
     if os.path.exists(cached_file):
-        print(f"⚡ [الكاش] المقطع {video_id} معالج مسبقاً! إرسال فوري...")
         return {"status": "ready", "video_id": video_id}
 
     work_dir = os.path.join(os.path.dirname(CACHE_DIR), f"temp_{video_id}")
@@ -1060,7 +1058,7 @@ async def stream(video_id: str):
     raise HTTPException(status_code=404)
 
 if __name__ == "__main__":
-    uvicorn.run("local_server:app", host="127.0.0.1", port=8000, log_level="warning")`;
+    uvicorn.run("local_server:app", host="127.0.0.1", port=8000, reload=False)`;
 
       const blob = new Blob([serverPyContent], { type: "text/x-python;charset=utf-8" });
       const link = document.createElement("a");
