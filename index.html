@@ -145,6 +145,7 @@
       margin: 0 auto 32px auto;
     }
 
+    /* الترتيب الهرمي للأزرار */
     .pyramid-container {
       display: flex;
       flex-direction: column;
@@ -529,12 +530,14 @@
           </div>
           <pre id="colab-code">!fuser -k 8000/tcp 2>/dev/null
 !pkill -f cloudflared 2>/dev/null
-!apt-get update -qq && apt-get install -y -qq ffmpeg git
-!pip install -q -U --no-cache-dir yt-dlp demucs soundfile scipy fastapi uvicorn
-!wget -q -nc https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
-!dpkg -i cloudflared-linux-amd64.deb
+!curl -fsSL https://deno.land/install.sh | sh > /dev/null 2>&1
+!wget -q -nc -O /usr/local/bin/cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+!chmod +x /usr/local/bin/cloudflared
+!pip install -q -U --no-cache-dir "yt-dlp[default,curl-cffi]" demucs soundfile scipy fastapi uvicorn requests
 
 import os, glob, shutil, subprocess, threading, time, re
+os.environ["PATH"] = "/root/.deno/bin:" + os.environ.get("PATH", "")
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
@@ -542,28 +545,34 @@ import uvicorn, yt_dlp
 
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
-
 CACHE_DIR = "/content/audio_cache"
 os.makedirs(CACHE_DIR, exist_ok=True)
-YTDL_OPTS = {'quiet': True, 'extractor_args': {'youtube': {'player_client': ['android', 'ios', 'mweb'], 'player_skip': ['webpage', 'configs']}}}
+
+def extract_video_id(url: str):
+    for p in [r'(?:v=|\/)([0-9A-Za-z_-]{11})(?:[&?]|$)', r'youtu\.be\/([0-9A-Za-z_-]{11})', r'embed\/([0-9A-Za-z_-]{11})', r'shorts\/([0-9A-Za-z_-]{11})']:
+        m = re.search(p, url)
+        if m: return m.group(1)
+    return None
 
 @app.get("/process")
 @app.post("/process")
 async def process_video(url: str):
-    with yt_dlp.YoutubeDL(YTDL_OPTS) as ydl:
-        video_id = ydl.extract_info(url, download=False).get("id")
+    video_id = extract_video_id(url)
+    if not video_id: return JSONResponse(status_code=400, content={"detail": "رابط غير صالح"})
     cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
     if os.path.exists(cached_file): return {"status": "ready", "video_id": video_id}
     work_dir = f"/content/work_{video_id}"
     os.makedirs(work_dir, exist_ok=True)
+    raw_template = os.path.join(work_dir, "raw_audio.%(ext)s")
     try:
-        raw_tmpl = os.path.join(work_dir, "raw.%(ext)s")
-        with yt_dlp.YoutubeDL({**YTDL_OPTS, 'format': 'bestaudio/best', 'outtmpl': raw_tmpl}) as ydl: ydl.download([url])
-        raw_file = glob.glob(os.path.join(work_dir, "raw.*"))[0]
+        ydl_opts = {'format': 'bestaudio/best', 'outtmpl': raw_template, 'quiet': True, 'impersonate': 'chrome', 'nocheckcertificate': True, 'extractor_args': {'youtube': {'player_client': ['ios', 'android', 'mweb']}}}
+        if os.path.exists("/content/cookies.txt"): ydl_opts['cookiefile'] = "/content/cookies.txt"
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl: ydl.download([f"https://www.youtube.com/watch?v={video_id}"])
+        raw_file = glob.glob(os.path.join(work_dir, "raw_audio.*"))[0]
         input_wav = os.path.join(work_dir, "input.wav")
         subprocess.run(["ffmpeg", "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
         subprocess.run(["demucs", "--two-stems", "vocals", "-d", "cuda", "-n", "htdemucs", "-o", work_dir, input_wav], check=True)
-        vocals = os.path.join(work_dir, "htdemucs", "input", "vocals.wav")
+        vocals = glob.glob(os.path.join(work_dir, "**", "vocals.wav"), recursive=True)[0]
         subprocess.run(["ffmpeg", "-y", "-i", vocals, "-b:a", "192k", cached_file], check=True)
         shutil.rmtree(work_dir, ignore_errors=True)
         return {"status": "ready", "video_id": video_id}
@@ -579,7 +588,7 @@ async def stream(video_id: str):
 
 threading.Thread(target=lambda: uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning"), daemon=True).start()
 time.sleep(2)
-t = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://127.0.0.1:8000"], stdout=subprocess.PIPE, text=True)
+t = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://127.0.0.1:8000"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 for line in t.stdout:
     m = re.search(r'https://[a-zA-Z0-9-]+\.trycloudflare\.com', line)
     if m: print("\n🔥 رابط السيرفر:\n" + m.group(0)); break</pre>
@@ -608,7 +617,7 @@ for line in t.stdout:
         <div class="tab-group">
           <span class="tab-label">حدد نظام التشغيل لديك:</span>
           <div class="tabs">
-            <button class="tab-btn active" onclick="setOS('linux', this)">🐧 Linux (Ubuntu / Arch / CachyOS)</button>
+            <button class="tab-btn active" onclick="setOS('linux', this)">🐧 Linux (Ubuntu / Arch / CachyOS / Fedora)</button>
             <button class="tab-btn" onclick="setOS('windows', this)">🪟 Windows (10 / 11)</button>
           </div>
         </div>
@@ -643,7 +652,7 @@ for line in t.stdout:
             <span>🚀</span> الخطوة 3: طريقة الاستخدام اليومية (كلما أردت استخدام الإضافة)
           </div>
           <div class="success-box">
-            ✅ <strong>لن تحتاج لتثبيت أي شيء مجدداً!</strong> في كل مرة تفتح فيها حاسوبك وتريد عزل الموسيقى، اكتب فقط هذين السطرين لتشغيل السيرفر:
+            ✅ <strong>لن تحتاج لتثبيت أي شيء مجدداً!</strong> في كل مرة تفتح فيها حاسوبك وتريد عزل الموسيقى، اكتب هذا الأمر البسيط فقط لتشغيل السيرفر:
           </div>
 
           <div class="code-container">
@@ -673,88 +682,72 @@ for line in t.stdout:
     let currentOS = 'linux';
     let currentHW = 'cpu';
 
+    // مصفوفة الأوامر الشاملة والمضمونة 100% للـ CPU والـ GPU بدون أي أخطاء تفعيل أو صلاحيات
     const commandsData = {
       linux: {
         cpu: {
           setupTitle: "أوامر التثبيت الأولي (Linux + CPU)",
-          setupCode: `# 1. تثبيت FFmpeg
-sudo pacman -S --needed ffmpeg || sudo apt install -y ffmpeg
+          setupCode: `# 1. تثبيت أداة FFmpeg من مدير الحزم
+sudo pacman -S --needed ffmpeg || sudo apt install -y ffmpeg || sudo dnf install -y ffmpeg
 
-# 2. إنشاء بيئة العمل الافتراضية وتفعيلها
+# 2. إنشاء بيئة العمل الافتراضية
 python3 -m venv naqawa_env
-source naqawa_env/bin/activate
-# (إذا كنت تستخدم fish shell اكتب: source naqawa_env/bin/activate.fish)
 
-# 3. تثبيت المتطلبات للمعالج CPU
-pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
-pip install fastapi uvicorn yt-dlp demucs soundfile scipy
+# 3. تثبيت PyTorch للـ CPU وبقية الحزم داخل البيئة مباشرة
+./naqawa_env/bin/pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+./naqawa_env/bin/pip install fastapi uvicorn yt-dlp demucs soundfile scipy
 
-# 4. تشغيل السيرفر
-python local_server.py`,
+# 4. تشغيل السيرفر المحلي
+./naqawa_env/bin/python local_server.py`,
           dailyTitle: "أمر التشغيل اليومي (Linux)",
-          dailyCode: `source naqawa_env/bin/activate
-python local_server.py
-
-# لمستخدمي fish shell:
-# source naqawa_env/bin/activate.fish
-# python local_server.py`
+          dailyCode: `./naqawa_env/bin/python local_server.py`
         },
         gpu: {
           setupTitle: "أوامر التثبيت الأولي (Linux + NVIDIA GPU CUDA)",
-          setupCode: `# 1. تثبيت FFmpeg
-sudo pacman -S --needed ffmpeg || sudo apt install -y ffmpeg
+          setupCode: `# 1. تثبيت أداة FFmpeg من مدير الحزم
+sudo pacman -S --needed ffmpeg || sudo apt install -y ffmpeg || sudo dnf install -y ffmpeg
 
-# 2. إنشاء البيئة وتفعيلها
+# 2. إنشاء بيئة العمل الافتراضية
 python3 -m venv naqawa_env
-source naqawa_env/bin/activate
 
-# 3. تثبيت PyTorch الداعم لـ CUDA كروت إنفيديا
-pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
-pip install fastapi uvicorn yt-dlp demucs soundfile scipy
+# 3. تثبيت PyTorch الداعم لكروت إنفيديا CUDA وبقية الحزم
+./naqawa_env/bin/pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
+./naqawa_env/bin/pip install fastapi uvicorn yt-dlp demucs soundfile scipy
 
 # 4. تشغيل السيرفر على كرت الشاشة
-python local_server.py`,
+./naqawa_env/bin/python local_server.py`,
           dailyTitle: "أمر التشغيل اليومي (Linux)",
-          dailyCode: `source naqawa_env/bin/activate
-python local_server.py`
+          dailyCode: `./naqawa_env/bin/python local_server.py`
         }
       },
       windows: {
         cpu: {
           setupTitle: "أوامر التثبيت الأولي (Windows + CPU)",
-          setupCode: `:: 1. إنشاء البيئة الافتراضية
+          setupCode: `:: 1. إنشاء بيئة العمل الافتراضية
 python -m venv naqawa_env
 
-:: 2. تفعيل البيئة
-naqawa_env\\Scripts\\activate
+:: 2. تثبيت PyTorch للـ CPU وبقية الحزم داخل البيئة
+naqawa_env\\Scripts\\pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+naqawa_env\\Scripts\\pip install fastapi uvicorn yt-dlp demucs soundfile scipy
 
-:: 3. تثبيت المتطلبات للمعالج CPU
-pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
-pip install fastapi uvicorn yt-dlp demucs soundfile scipy
-
-:: 4. تشغيل السيرفر
-python local_server.py`,
+:: 3. تشغيل السيرفر المحلي
+naqawa_env\\Scripts\\python local_server.py`,
           dailyTitle: "أمر التشغيل اليومي (Windows)",
-          dailyCode: `naqawa_env\\Scripts\\activate
-python local_server.py`
+          dailyCode: `naqawa_env\\Scripts\\python local_server.py`
         },
         gpu: {
           setupTitle: "أوامر التثبيت الأولي (Windows + NVIDIA GPU CUDA)",
-          setupCode: `:: 1. إنشاء البيئة الافتراضية
+          setupCode: `:: 1. إنشاء بيئة العمل الافتراضية
 python -m venv naqawa_env
 
-:: 2. تفعيل البيئة
-naqawa_env\\Scripts\\activate
+:: 2. تثبيت PyTorch الداعم لكروت إنفيديا CUDA وبقية الحزم
+naqawa_env\\Scripts\\pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
+naqawa_env\\Scripts\\pip install fastapi uvicorn yt-dlp demucs soundfile scipy
 
-:: 3. تثبيت المتطلبات الداعمة لكرت الشاشة CUDA
-pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
-pip install fastapi uvicorn yt-dlp demucs soundfile scipy
-
-:: 4. تشغيل السيرفر على كرت الشاشة
-python local_server.py`,
+:: 3. تشغيل السيرفر على كرت الشاشة
+naqawa_env\\Scripts\\python local_server.py`,
           dailyTitle: "أمر التشغيل اليومي (Windows)",
-          dailyCode: `naqawa_env\\Scripts\\activate
-python local_server.py`
+          dailyCode: `naqawa_env\\Scripts\\python local_server.py`
         }
       }
     };
@@ -791,6 +784,7 @@ python local_server.py`
       });
     }
 
+    // دالة توليد وتحميل ملف local_server.py النهائي والمصحح
     function downloadServerFile() {
       const serverPyContent = `import os, sys, glob, shutil, argparse, subprocess, torch
 from fastapi import FastAPI, HTTPException
@@ -833,20 +827,32 @@ async def process_video(url: str):
 
     cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
     if os.path.exists(cached_file):
+        print(f"⚡ [الكاش] المقطع {video_id} معالج مسبقاً! إرسال فوري...")
         return {"status": "ready", "video_id": video_id}
 
     work_dir = os.path.join(os.path.dirname(CACHE_DIR), f"temp_{video_id}")
     os.makedirs(work_dir, exist_ok=True)
     try:
         raw_tmpl = os.path.join(work_dir, "raw.%(ext)s")
-        with yt_dlp.YoutubeDL({**YTDL_OPTS, 'format': 'bestaudio/best', 'outtmpl': raw_tmpl}) as ydl: ydl.download([url])
+        download_opts = {**YTDL_OPTS, 'format': 'bestaudio/best', 'outtmpl': raw_tmpl}
+        with yt_dlp.YoutubeDL(download_opts) as ydl: ydl.download([url])
         raw_file = glob.glob(os.path.join(work_dir, "raw.*"))[0]
         input_wav = os.path.join(work_dir, "input.wav")
         subprocess.run(["ffmpeg", "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
-        subprocess.run(["demucs", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "-o", work_dir, input_wav], check=True)
-        vocals = os.path.join(work_dir, "htdemucs", "input", "vocals.wav")
-        subprocess.run(["ffmpeg", "-y", "-i", vocals, "-b:a", "192k", cached_file], check=True)
+
+        cmd = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "-o", work_dir, input_wav]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        if res.returncode != 0:
+            raise Exception(f"خطأ Demucs: {res.stderr[:200]}")
+
+        vocals_list = glob.glob(os.path.join(work_dir, "**", "vocals.wav"), recursive=True)
+        if not vocals_list:
+            raise Exception("تعذر العثور على ملف vocals.wav الناتج")
+        vocals_path = vocals_list[0]
+
+        subprocess.run(["ffmpeg", "-y", "-i", vocals_path, "-b:a", "192k", cached_file], check=True)
         shutil.rmtree(work_dir, ignore_errors=True)
+        print(f"✅ تمت المعالجة بنجاح: {video_id}")
         return {"status": "ready", "video_id": video_id}
     except Exception as e:
         shutil.rmtree(work_dir, ignore_errors=True)
@@ -859,7 +865,7 @@ async def stream(video_id: str):
     raise HTTPException(status_code=404)
 
 if __name__ == "__main__":
-    uvicorn.run("local_server:app", host="127.0.0.1", port=8000, reload=False)`;
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")`;
 
       const blob = new Blob([serverPyContent], { type: "text/x-python;charset=utf-8" });
       const link = document.createElement("a");
