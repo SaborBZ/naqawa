@@ -45,7 +45,6 @@
       padding: 0 24px;
     }
 
-    /* Header بسيط ونظيف بدون روابط مكررة */
     header {
       padding: 18px 0;
       border-bottom: 1px solid var(--card-border);
@@ -58,7 +57,7 @@
 
     .nav-content {
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
     }
 
@@ -87,6 +86,26 @@
       font-size: 20px;
       font-weight: 900;
       color: var(--gold);
+    }
+
+    .github-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .github-link:hover {
+      border-color: var(--primary);
+      color: var(--text-main);
+      background: rgba(0, 168, 107, 0.1);
     }
 
     .hero {
@@ -126,7 +145,6 @@
       margin: 0 auto 32px auto;
     }
 
-    /* الترتيب الهرمي للأزرار */
     .pyramid-container {
       display: flex;
       flex-direction: column;
@@ -167,28 +185,26 @@
       width: 100%;
       padding: 15px 28px;
       font-size: 16px;
+      background: linear-gradient(135deg, var(--primary), #008f5a);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(0, 168, 107, 0.4);
     }
 
-    .btn-chrome {
-      background: #ffffff;
-      color: #0d1412;
-      box-shadow: 0 4px 18px rgba(255, 255, 255, 0.18);
-    }
-
-    .btn-chrome:hover {
-      background: #f1f5f9;
+    .btn-main:hover {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
       transform: translateY(-2px);
     }
 
     .btn-primary {
       flex: 1;
-      background: var(--primary);
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(0, 168, 107, 0.3);
+      background: var(--card-bg);
+      color: var(--gold);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .btn-primary:hover {
-      background: var(--primary-light);
+      border-color: var(--gold);
       transform: translateY(-2px);
     }
 
@@ -361,7 +377,7 @@
     }
 
     .instructions-list li {
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .instructions-list strong {
@@ -399,7 +415,7 @@
 </head>
 <body>
 
-  <!-- Header مبسط بدون روابط مكررة -->
+  <!-- Header -->
   <header>
     <div class="container nav-content">
       <a href="#" class="logo-area">
@@ -408,25 +424,28 @@
           <h1>نقاوة | Naqawa</h1>
         </div>
       </a>
+      <a href="https://github.com/saborbz/naqawa" target="_blank" class="github-link">
+        ⭐ المستودع على GitHub
+      </a>
     </div>
   </header>
 
   <div class="container">
-    <!-- Hero Section مع الترتيب الهرمي للأزرار -->
+    <!-- Hero Section -->
     <section class="hero">
-      <div class="hero-badge">متاح مجاناً للجميع ✨</div>
+      <div class="hero-badge">مشروع مفتوح المصدر ومجاني 100% 🚀</div>
       <h2>عزل الموسيقى من يوتيوب<br><span>بالذكاء الاصطناعي مع مزامنة لحظية</span></h2>
-      <p>أداة مفتوحة المصدر لعزل الآلات الموسيقية والضجيج عن الصوت البشري في مقاطع اليوتيوب بجودة استوديو احترافية.</p>
+      <p>أداة مفتوحة المصدر لعزل الآلات الموسيقية عن الصوت البشري في مقاطع اليوتيوب بجودة استوديو احترافية وبدون أي تكاليف.</p>
 
       <!-- الهيكل الهرمي للأزرار -->
       <div class="pyramid-container">
-        <!-- قمة الهرم: تثبيت الإضافة -->
+        <!-- قمة الهرم -->
         <div class="pyramid-top">
-          <a href="https://chrome.google.com/webstore" target="_blank" class="btn btn-chrome btn-main">
-            🛍️ تثبيت الإضافة من سوق Chrome الإلكتروني
+          <a href="#install" class="btn btn-main">
+            ⬇️ تحميل وتثبيت الإضافة مجاناً (ZIP)
           </a>
         </div>
-        <!-- قاعدة الهرم: سحابي يمين ومحلي يسار -->
+        <!-- قاعدة الهرم -->
         <div class="pyramid-bottom">
           <a href="#cloud" class="btn btn-primary">
             ☁️ شرح التشغيل السحابي
@@ -453,6 +472,39 @@
         <p>خيارات متعددة: تشغيل سحابي مجاني على كروت Tesla T4 أو تشغيل محلي دون إرسال بيانات.</p>
       </div>
     </div>
+
+    <!-- Section 0: Install Extension -->
+    <section id="install">
+      <div class="section-header">
+        <h2>تثبيت الإضافة في المتصفح (في 10 ثوانٍ)</h2>
+        <p>متوافق مع جميع متصفحات Chromium (Chrome / Edge / Brave / CachyOS Browser)</p>
+      </div>
+
+      <div class="step-card">
+        <ol class="instructions-list">
+          <li>
+            <strong>الخطوة 1:</strong> حمّل ملف الإضافة المضغوط مباشرة من هنا:
+            <br>
+            <a href="https://github.com/saborbz/naqawa/raw/main/naqawa.zip" class="btn btn-download" style="margin: 10px 0; display: inline-flex;">
+              📦 تحميل ملف naqawa.zip
+            </a>
+            <br>
+            <em>(بعد التحميل، فك الضغط عن الملف في أي مجلد على جهازك).</em>
+          </li>
+          <li>
+            <strong>الخطوة 2:</strong> افتح متصفحك وتوجه إلى صفحة إدارة الإضافات:
+            <br>
+            اكتب في شريط العناوين: <code>chrome://extensions</code> (أو <code>edge://extensions</code> في متصفح Edge).
+          </li>
+          <li>
+            <strong>الخطوة 3:</strong> فعّل <strong>وضع المطور (Developer mode)</strong> من الزاوية العلوية، ثم اضغط على زر <strong>تحميل حزمة غير مضغوطة (Load unpacked)</strong> واختر مجلد الإضافة.
+          </li>
+        </ol>
+        <div class="success-box">
+          🎉 <strong>مبروك!</strong> ستظهر أيقونة «نقاوة» في شريط أدوات متصفحك وأصبحت جاهزة للاستخدام دائماً.
+        </div>
+      </div>
+    </section>
 
     <!-- Section 1: Cloud Mode -->
     <section id="cloud">
@@ -575,7 +627,7 @@ for line in t.stdout:
             <span>⚙️</span> الخطوة 2: التثبيت الأولي (يتم تنفيذه لمرة واحدة فقط)
           </div>
           <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px;">افتح موجه الأوامر (CMD أو Terminal) في المجلد الذي حمّلت فيه الملف، ونفّذ الأوامر التالية بالترتيب:</p>
-
+          
           <div class="code-container">
             <div class="code-header">
               <span id="setup-title">أوامر التثبيت الأولي</span>
