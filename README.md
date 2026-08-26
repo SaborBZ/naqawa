@@ -29,12 +29,6 @@
 - ☁️ **Cloud Processing Support:** Provides code that enables fast processing using free Google Colab GPUs (Tesla T4 GPU).
 - 💻 **Local Processing:** Run directly on your machine using your **CPU** or **NVIDIA GPU (CUDA)** without uploading any data.
 
-### 🚀 3-Step Quick Installation (Chrome / Edge / Brave):
-
-1. **Download Extension:** Download the [`naqawa.zip`](https://github.com/saborbz/naqawa/raw/main/naqawa.zip) archive and extract it anywhere on your computer.
-2. **Open Extensions Manager:** In your browser, navigate to `chrome://extensions` (or `edge://extensions`).
-3. **Load Unpacked:** Enable **Developer mode** in the top corner, click **Load unpacked**, and select the extracted folder.
-
 ### ⚠️ Known Issues & Limitations
 
 - ⏱️ **Slight Audio-Video Sync Delay:** A minor delay in audio/video synchronization may occur when seeking or fast-forwarding the video.
@@ -42,6 +36,12 @@
 - 🔄 **Audio Overlap on Video Change:** Switching to another YouTube video after using the extension might continue playing audio from the previous video unless you refresh the page.
 - ☁️ **Cloud Processing Errors:** Potential issues or bugs may occur when using the cloud separation option, specifically within the Google Colab code.
 - 💻 **Untested on Windows:** The local processing/extraction option has not been tested on Windows OS yet.
+
+### 🚀 3-Step Quick Installation (Chrome / Edge / Brave):
+
+1. **Download Extension:** Download the [`naqawa.zip`](https://github.com/saborbz/naqawa/raw/main/naqawa.zip) archive and extract it anywhere on your computer.
+2. **Open Extensions Manager:** In your browser, navigate to `chrome://extensions` (or `edge://extensions`).
+3. **Load Unpacked:** Enable **Developer mode** in the top corner, click **Load unpacked**, and select the extracted folder.
 
 ### 📖 Official Website & Interactive Guide:
 Visit the official website to explore interactive setup commands and full guides:  
