@@ -26,4 +26,4 @@
 ---
 
 ## 📖 الموقع الرسمي والشرح التفاعلي:
-تفضل بزيارة موقع التوثيق الرسمي: [https://naqawa.open-source-project.workers.dev/] (https://naqawa.open-source-project.workers.dev/)
+تفضل بزيارة موقع التوثيق الرسمي: [https://naqawa.open-source-project.workers.dev/](https://naqawa.open-source-project.workers.dev/)
