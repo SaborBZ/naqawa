@@ -19,7 +19,7 @@
 ---
 
 <a name="-english"></a>
-## 🇬🇧 English
+##  English
 
 > **A 100% Free & Open-Source browser extension that isolates instruments from vocals in YouTube videos using deep learning, with real-time video synchronization.**
 
@@ -37,14 +37,14 @@
 
 ### 📖 Interactive Web Guide:
 Explore interactive setup commands and full guides on our website:  
-👉 **[https://saborbz.github.io/naqawa/](https://saborbz.github.io/naqawa/)**
+👉 **[https://naqawa.open-source-project.workers.dev/](https://naqawa.open-source-project.workers.dev/)**
 
 ---
 
 <a name="-العربية"></a>
 <div dir="rtl">
 
-## 🇸🇦 العربية
+##  العربية
 
 > **إضافة متصفح مفتوحة المصدر ومجانية 100% لعزل الموسيقى والآلات عن مقاطع اليوتيوب بالذكاء الاصطناعي مع مزامنة لحظية تامة للصوت والصورة.**
 
@@ -62,6 +62,6 @@ Explore interactive setup commands and full guides on our website:
 
 ### 📖 الموقع الرسمي والشرح التفاعلي:
 تفضل بزيارة الموقع الرسمي للاطلاع على الشرح التفاعلي وأوامر التثبيت:  
-👉 **[https://saborbz.github.io/naqawa/](https://saborbz.github.io/naqawa/)**
+👉 **[https://naqawa.open-source-project.workers.dev/](https://naqawa.open-source-project.workers.dev/)**
 
 </div>
