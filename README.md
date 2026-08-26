@@ -30,7 +30,6 @@
 - 💻 **Local Processing:** Run directly on your machine using your **CPU** or **NVIDIA GPU (CUDA)** without uploading any data.
 
 ### ⚠️ Known Issues & Limitations
-
 - ⏱️ **Slight Audio-Video Sync Delay:** A minor delay in audio/video synchronization may occur when seeking or fast-forwarding the video.
 - 🎵 **Residual Music Artifacts:** Some background musical tones/artifacts may still be audible, as AI vocal separation is not 100% perfect.
 - 🔄 **Audio Overlap on Video Change:** Switching to another YouTube video after using the extension might continue playing audio from the previous video unless you refresh the page.
@@ -38,7 +37,6 @@
 - 💻 **Untested on Windows:** The local processing/extraction option has not been tested on Windows OS yet.
 
 ### 🚀 3-Step Quick Installation (Chrome / Edge / Brave):
-
 1. **Download Extension:** Download the [`naqawa.zip`](https://github.com/saborbz/naqawa/raw/main/naqawa.zip) archive and extract it anywhere on your computer.
 2. **Open Extensions Manager:** In your browser, navigate to `chrome://extensions` (or `edge://extensions`).
 3. **Load Unpacked:** Enable **Developer mode** in the top corner, click **Load unpacked**, and select the extracted folder.
@@ -62,18 +60,17 @@ Visit the official website to explore interactive setup commands and full guides
 - ☁️ **دعم التشغيل السحابي:** توفير كود برمجي يسمح بمعالجة سريعة عبر كروت شاشة Google Colab مجاناً (Tesla T4 GPU).
 - 💻 **تشغيل محلي بخصوصية مطلقة:** تشغيل مباشر على حاسوبك عبر المعالج (**CPU**) أو كرت الشاشة (**NVIDIA CUDA GPU**) دون رفع أي بيانات.
 
-### 🚀 طريقة التثبيت في 3 خطوات (Chrome / Edge / Brave):
-
-1. **حمّل الإضافة:** قم بتحميل ملف [`naqawa.zip`](https://github.com/saborbz/naqawa/raw/main/naqawa.zip) وفك الضغط عنه في أي مجلد على جهازك.
-2. **افتح إدارة الإضافات:** في متصفحك، توجه إلى الرابط `chrome://extensions` (أو `edge://extensions`).
-3. **فعّل وضع المطور:** فعّل **وضع المطور (Developer mode)** من الزاوية العلوية، ثم اضغط على زر **تحميل حزمة غير مضغوطة (Load unpacked)** واختر مجلد الإضافة.
-
 ### ⚠️ المشاكل المعروفة والعيوب الحالية
 - ⏱️ **تأخير بسيط في المزامنة:** قد يحدث تأخير بسيط في مزامنة الصوت والصورة عند تقديم الفيديو.
 - 🎵 **بقايا نغمات موسيقية:** احتمال سماع بعض البقايا الموسيقية نظراً لأن الذكاء الاصطناعي لا يعزل الموسيقى بنسبة 100%.
 - 🔄 **تداخل صوت الفيديو السابق:** عند الانتقال لفيديو آخر بعد استخدام الإضافة قد يستمر صوت الفيديو السابق إلا إذا قمت بإعادة تحميل الصفحة.
 - ☁️ **أخطاء في التشغيل السحابي:** وجود بعض المشاكل غير المستقرة في خيار المعالجة السحابية، تحديدا في كود Google Colab.
 - 💻 **غير مُجرّب على ويندوز:** خيار المعالجة المحلية لم يتم اختباره بعد على أنظمة Windows.
+
+### 🚀 طريقة التثبيت في 3 خطوات (Chrome / Edge / Brave):
+1. **حمّل الإضافة:** قم بتحميل ملف [`naqawa.zip`](https://github.com/saborbz/naqawa/raw/main/naqawa.zip) وفك الضغط عنه في أي مجلد على جهازك.
+2. **افتح إدارة الإضافات:** في متصفحك، توجه إلى الرابط `chrome://extensions` (أو `edge://extensions`).
+3. **فعّل وضع المطور:** فعّل **وضع المطور (Developer mode)** من الزاوية العلوية، ثم اضغط على زر **تحميل حزمة غير مضغوطة (Load unpacked)** واختر مجلد الإضافة.
 
 ### 📖الموقع الرسمي والشرح التفاعلي:
 تفضل بزيارة الموقع الرسمي للاطلاع على الشرح التفاعلي وأوامر التثبيت:  
