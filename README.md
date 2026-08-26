@@ -19,24 +19,24 @@
 ---
 
 <a name="-english"></a>
-##  English
+## English
 
-> **A 100% Free & Open-Source browser extension that isolates instruments from vocals in YouTube videos using deep learning, with real-time video synchronization.**
+> **A 100% free and open-source browser extension to isolate music and instruments from YouTube videos using AI, with video-audio synchronization.**
 
 ### ✨ Key Features
-- ⚡ **Real-Time Sync (Drift Guard):** Zero lip-sync drift even during seeking, scrubbing, or playback speed changes.
-- 🧠 **Studio-Grade AI (Demucs v4):** Powered by state-of-the-art neural networks for high-fidelity vocal extraction.
-- ☁️ **Cloud Acceleration:** Free GPU-powered processing via Google Colab (Tesla T4 GPU).
-- 💻 **100% Private Local Processing:** Run directly on your machine using your **CPU** or **NVIDIA GPU (CUDA)** without sending any audio outside your network.
+- ⚡ **Synchronization (Drift Guard):** Matches video and audio timing even when seeking, scrubbing, or changing playback speed.
+- 🧠 **AI-Powered (Demucs v4):** Isolates musical instruments with good accuracy while keeping human vocals clear.
+- ☁️ **Cloud Processing Support:** Provides code that enables fast processing using free Google Colab GPUs (Tesla T4 GPU).
+- 💻 **Local Processing:** Run directly on your machine using your **CPU** or **NVIDIA GPU (CUDA)** without uploading any data.
 
 ### 🚀 3-Step Quick Installation (Chrome / Edge / Brave):
 
-1. **Download Extension:** Download the [`naqawa.zip`](https://github.com/saborbz/naqawa/raw/main/naqawa.zip) archive and extract it on your computer.
+1. **Download Extension:** Download the [`naqawa.zip`](https://github.com/saborbz/naqawa/raw/main/naqawa.zip) archive and extract it anywhere on your computer.
 2. **Open Extensions Manager:** In your browser, navigate to `chrome://extensions` (or `edge://extensions`).
-3. **Load Unpacked:** Toggle **Developer mode** in the top corner, click **Load unpacked**, and select the extracted folder.
+3. **Load Unpacked:** Enable **Developer mode** in the top corner, click **Load unpacked**, and select the extracted folder.
 
-### 📖 Interactive Web Guide:
-Explore interactive setup commands and full guides on our website:  
+### 📖 Official Website & Interactive Guide:
+Visit the official website to explore interactive setup commands and full guides:  
 👉 **[https://naqawa.open-source-project.workers.dev/](https://naqawa.open-source-project.workers.dev/)**
 
 ---
@@ -46,12 +46,12 @@ Explore interactive setup commands and full guides on our website:
 
 ##  العربية
 
-> **إضافة متصفح مفتوحة المصدر ومجانية 100% لعزل الموسيقى والآلات عن مقاطع اليوتيوب بالذكاء الاصطناعي مع مزامنة لحظية تامة للصوت والصورة.**
+> **إضافة متصفح مفتوحة المصدر ومجانية 100% لعزل الموسيقى والآلات عن مقاطع اليوتيوب بالذكاء الاصطناعي مع مزامنة الصوت والصورة.**
 
 ### ✨ المميزات الرئيسية
-- ⚡ **مزامنة فورية (Drift Guard):** تطابق تام بين حركة الشفاه ومسار الصوت النقي حتى عند التقديم وتغيير سرعات التشغيل.
-- 🧠 **ذكاء اصطناعي فائق (Demucs v4):** عزل الآلات الموسيقية بدقة استوديو احترافية مع الحفاظ على نقاء الصوت البشري.
-- ☁️ **دعم التشغيل السحابي:** معالجة سريعة عبر كروت شاشة Google Colab مجاناً (Tesla T4 GPU).
+- ⚡ **المزامنة (Drift Guard):** تطابق بين الفيديو و الصوت حتى عند التقديم وتغيير سرعات التشغيل.
+- 🧠 **الذكاء اصطناعي (Demucs v4):** عزل الآلات الموسيقية بدقة جيدة مع الحفاظ على نقاء الصوت البشري.
+- ☁️ **دعم التشغيل السحابي:**توفير كود برمجي يسمح بمعالجة سريعة عبر كروت شاشة Google Colab مجاناً (Tesla T4 GPU).
 - 💻 **تشغيل محلي بخصوصية مطلقة:** تشغيل مباشر على حاسوبك عبر المعالج (**CPU**) أو كرت الشاشة (**NVIDIA CUDA GPU**) دون رفع أي بيانات.
 
 ### 🚀 طريقة التثبيت في 3 خطوات (Chrome / Edge / Brave):
