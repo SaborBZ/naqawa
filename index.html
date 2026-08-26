@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>نقاوة | Naqawa - عزل الموسيقى بالذكاء الاصطناعي</title>
+  <title id="pageTitle">نقاوة | Naqawa - عزل الموسيقى بالذكاء الاصطناعي</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Fira+Code:wght@400;500&family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #070c0a;
@@ -26,7 +26,11 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Tajawal', sans-serif;
+      font-family: 'Tajawal', 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    html[dir="ltr"] * {
+      font-family: 'Inter', 'Tajawal', system-ui, -apple-system, sans-serif;
     }
 
     body {
@@ -36,9 +40,9 @@
     }
 
     code, pre {
-      font-family: 'Fira Code', monospace;
-      direction: ltr;
-      text-align: left;
+      font-family: 'Fira Code', monospace !important;
+      direction: ltr !important;
+      text-align: left !important;
     }
 
     .container {
@@ -88,6 +92,33 @@
       font-size: 20px;
       font-weight: 900;
       color: var(--gold);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lang-btn {
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--gold);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lang-btn:hover {
+      background: rgba(212, 175, 55, 0.25);
+      border-color: var(--gold);
+      color: #fff;
     }
 
     .github-link {
@@ -422,6 +453,11 @@
       font-size: 14px;
     }
 
+    html[dir="ltr"] .instructions-list {
+      padding-right: 0;
+      padding-left: 20px;
+    }
+
     .instructions-list li {
       margin-bottom: 10px;
     }
@@ -440,6 +476,11 @@
       color: var(--text-main);
     }
 
+    html[dir="ltr"] .tip-box {
+      border-right: none;
+      border-left: 3px solid var(--gold);
+    }
+
     .success-box {
       background: rgba(0, 168, 107, 0.08);
       border-right: 3px solid var(--primary);
@@ -450,6 +491,11 @@
       color: var(--text-main);
     }
 
+    html[dir="ltr"] .success-box {
+      border-right: none;
+      border-left: 3px solid var(--primary);
+    }
+
     .danger-box {
       background: rgba(239, 68, 68, 0.08);
       border-right: 3px solid var(--danger);
@@ -458,6 +504,11 @@
       margin: 14px 0;
       font-size: 13px;
       color: var(--text-main);
+    }
+
+    html[dir="ltr"] .danger-box {
+      border-right: none;
+      border-left: 3px solid var(--danger);
     }
 
     .transparency-grid {
@@ -509,41 +560,47 @@
           <h1>نقاوة | Naqawa</h1>
         </div>
       </a>
-      <a href="https://github.com/saborbz/naqawa" target="_blank" class="github-link">
-        ⭐ المستودع على GitHub
-      </a>
+      <div class="header-actions">
+        <!-- زر التبديل بين اللغتين -->
+        <button id="langToggleBtn" class="lang-btn" onclick="toggleLanguage()">
+          🌐 English
+        </button>
+        <a href="https://github.com/saborbz/naqawa" target="_blank" class="github-link">
+          <span data-i18n="github_btn">⭐ المستودع على GitHub</span>
+        </a>
+      </div>
     </div>
   </header>
 
   <div class="container">
     <!-- Hero Section -->
     <section class="hero">
-      <div class="hero-badge">مشروع مفتوح المصدر ومجاني 100% 🚀</div>
-      <h2>عزل الموسيقى من يوتيوب<br><span>بالذكاء الاصطناعي مع مزامنة لحظية</span></h2>
-      <p>أداة مفتوحة المصدر لعزل الآلات الموسيقية عن الصوت البشري في مقاطع اليوتيوب بجودة استوديو احترافية وبدون أي تكاليف.</p>
+      <div class="hero-badge" data-i18n="hero_badge">مشروع مفتوح المصدر ومجاني 100% 🚀</div>
+      <h2 data-i18n="hero_title">عزل الموسيقى من يوتيوب<br><span>بالذكاء الاصطناعي مع مزامنة لحظية</span></h2>
+      <p data-i18n="hero_desc">أداة مفتوحة المصدر لعزل الآلات الموسيقية عن الصوت البشري في مقاطع اليوتيوب بجودة استوديو احترافية وبدون أي تكاليف.</p>
 
       <!-- الهيكل الهرمي للأزرار -->
       <div class="pyramid-container">
         <!-- قمة الهرم: تحميل الإضافة -->
         <div class="pyramid-top">
-          <a href="#install" class="btn btn-main">
+          <a href="#install" class="btn btn-main" data-i18n="btn_install_top">
             ⬇️ تحميل وتثبيت الإضافة مجاناً (ZIP)
           </a>
         </div>
 
         <!-- قاعدة الهرم: الشرحان -->
         <div class="pyramid-bottom">
-          <a href="#cloud" class="btn btn-primary">
+          <a href="#cloud" class="btn btn-primary" data-i18n="btn_cloud_guide">
             ☁️ شرح التشغيل السحابي
           </a>
-          <a href="#local" class="btn btn-secondary">
+          <a href="#local" class="btn btn-secondary" data-i18n="btn_local_guide">
             💻 شرح التشغيل المحلي
           </a>
         </div>
 
         <!-- الخانة الحمراء تحت الشرحين -->
         <div class="pyramid-danger">
-          <a href="#transparency" class="btn btn-danger-link">
+          <a href="#transparency" class="btn btn-danger-link" data-i18n="btn_danger_guide">
             🗑️ الشفافية، ماذا يحدث في جهازك؟ وطريقة الحذف الكامل
           </a>
         </div>
@@ -553,47 +610,45 @@
     <!-- مميزات الإضافة -->
     <div class="features">
       <div class="feature-card">
-        <h3>⚡ مزامنة تامة 100%</h3>
-        <p>نظام Drift Guard يضمن تطابق حركة الشفاه والصوت حتى عند التقديم وتغيير السرعات.</p>
+        <h3 data-i18n="feat1_title">⚡ مزامنة تامة 100%</h3>
+        <p data-i18n="feat1_desc">نظام Drift Guard يضمن تطابق حركة الشفاه والصوت حتى عند التقديم وتغيير السرعات.</p>
       </div>
       <div class="feature-card">
-        <h3>🧠 Demucs v4 AI</h3>
-        <p>يعتمد على أحدث خوارزميات الذكاء الاصطناعي لفصل الترددات بدقة متناهية.</p>
+        <h3 data-i18n="feat2_title">🧠 Demucs v4 AI</h3>
+        <p data-i18n="feat2_desc">يعتمد على أحدث خوارزميات الذكاء الاصطناعي لفصل الترددات بدقة متناهية.</p>
       </div>
       <div class="feature-card">
-        <h3>🔒 خصوصية وسرعة مطلقة</h3>
-        <p>خيارات متعددة: تشغيل سحابي مجاني على كروت Tesla T4 أو تشغيل محلي دون إرسال بيانات.</p>
+        <h3 data-i18n="feat3_title">🔒 خصوصية وسرعة مطلقة</h3>
+        <p data-i18n="feat3_desc">خيارات متعددة: تشغيل سحابي مجاني على كروت Tesla T4 أو تشغيل محلي دون إرسال بيانات.</p>
       </div>
     </div>
 
     <!-- Section 0: Install Extension -->
     <section id="install">
       <div class="section-header">
-        <h2>تثبيت الإضافة في المتصفح (في 10 ثوانٍ)</h2>
-        <p>متوافق مع جميع متصفحات Chromium (Chrome / Edge / Brave / CachyOS Browser)</p>
+        <h2 data-i18n="install_sec_title">تثبيت الإضافة في المتصفح (في 10 ثوانٍ)</h2>
+        <p data-i18n="install_sec_desc">متوافق مع جميع متصفحات Chromium (Chrome / Edge / Brave / CachyOS Browser)</p>
       </div>
 
       <div class="step-card">
         <ol class="instructions-list">
           <li>
-            <strong>الخطوة 1:</strong> حمّل ملف الإضافة المضغوط مباشرة من هنا:
+            <strong data-i18n="install_step1_title">الخطوة 1:</strong> <span data-i18n="install_step1_desc">حمّل ملف الإضافة المضغوط مباشرة من هنا:</span>
             <br>
             <a href="https://github.com/saborbz/naqawa/raw/main/naqawa.zip" class="btn btn-download" style="margin: 10px 0; display: inline-flex;">
-              📦 تحميل ملف naqawa.zip
+              <span data-i18n="install_download_zip_btn">📦 تحميل ملف naqawa.zip</span>
             </a>
             <br>
-            <em>(بعد التحميل، فك الضغط عن الملف في أي مجلد على جهازك).</em>
+            <em data-i18n="install_step1_note">(بعد التحميل، فك الضغط عن الملف في أي مجلد على جهازك).</em>
           </li>
           <li>
-            <strong>الخطوة 2:</strong> افتح متصفحك وتوجه إلى صفحة إدارة الإضافات:
-            <br>
-            اكتب في شريط العناوين: <code>chrome://extensions</code> (أو <code>edge://extensions</code> في متصفح Edge).
+            <strong data-i18n="install_step2_title">الخطوة 2:</strong> <span data-i18n="install_step2_desc">افتح متصفحك وتوجه إلى صفحة إدارة الإضافات: اكتب في شريط العناوين: <code>chrome://extensions</code> (أو <code>edge://extensions</code> في متصفح Edge).</span>
           </li>
           <li>
-            <strong>الخطوة 3:</strong> فعّل <strong>وضع المطور (Developer mode)</strong> من الزاوية العلوية، ثم اضغط على زر <strong>تحميل حزمة غير مضغوطة (Load unpacked)</strong> واختر مجلد الإضافة.
+            <strong data-i18n="install_step3_title">الخطوة 3:</strong> <span data-i18n="install_step3_desc">فعّل <strong>وضع المطور (Developer mode)</strong> من الزاوية العلوية، ثم اضغط على زر <strong>تحميل حزمة غير مضغوطة (Load unpacked)</strong> واختر مجلد الإضافة.</span>
           </li>
         </ol>
-        <div class="success-box">
+        <div class="success-box" data-i18n="install_success_box">
           🎉 <strong>مبروك!</strong> ستظهر أيقونة «نقاوة» في شريط أدوات متصفحك وأصبحت جاهزة للاستخدام دائماً.
         </div>
       </div>
@@ -602,23 +657,25 @@
     <!-- Section 1: Cloud Mode -->
     <section id="cloud">
       <div class="section-header">
-        <h2>شرح التشغيل السحابي (Google Colab)</h2>
-        <p>استخدم كرت شاشة سحابي مجاني (Tesla T4) بدون استهلاك موارد جهازك</p>
+        <h2 data-i18n="cloud_sec_title">شرح التشغيل السحابي (Google Colab)</h2>
+        <p data-i18n="cloud_sec_desc">استخدم كرت شاشة سحابي مجاني (Tesla T4) بدون استهلاك موارد جهازك</p>
       </div>
 
       <div class="step-card">
         <ol class="instructions-list">
-          <li>افتح موقع <a href="https://colab.research.google.com" target="_blank" style="color: var(--primary-light);">Google Colab</a> وسجّل الدخول بحسابك.</li>
-          <li>اضغط على <strong>New notebook</strong> (دفتر ملاحظات جديد).</li>
-          <li>من القائمة العلوية اضغط على <strong>Edit</strong> ثم اختر <strong>Notebook settings</strong>.</li>
-          <li>من خانة <em>Hardware accelerator</em>، اختر <strong>T4 GPU</strong> ثم اضغط <strong>Save</strong>.</li>
-          <li>الصق كود السيرفر أدناه في الخلية واضغط على زر التشغيل <strong>Run ▶️</strong>:</li>
+          <li data-i18n="cloud_step1">افتح موقع <a href="https://colab.research.google.com" target="_blank" style="color: var(--primary-light);">Google Colab</a> وسجّل الدخول بحسابك.</li>
+          <li data-i18n="cloud_step2">اضغط على <strong>New notebook</strong> (دفتر ملاحظات جديد).</li>
+          <li data-i18n="cloud_step3">من القائمة العلوية اضغط على <strong>Edit</strong> ثم اختر <strong>Notebook settings</strong>.</li>
+          <li data-i18n="cloud_step4">من خانة <em>Hardware accelerator</em>، اختر <strong>T4 GPU</strong> ثم اضغط <strong>Save</strong>.</li>
+          <li data-i18n="cloud_step5">الصق كود السيرفر أدناه في الخلية واضغط على زر التشغيل <strong>Run ▶️</strong>:</li>
         </ol>
 
         <div class="code-container">
           <div class="code-header">
             <span>Colab Script</span>
-            <button class="copy-btn" onclick="copyCode('colab-code', this)">نسخ الكود 📋</button>
+            <button class="copy-btn" onclick="copyCode('colab-code', this)">
+              <span class="copy-text">نسخ الكود 📋</span>
+            </button>
           </div>
           <pre id="colab-code"># 1. إغلاق أي جلسات قديمة
 !fuser -k 8000/tcp 2>/dev/null
@@ -773,7 +830,7 @@ print("="*60 + "\n")</pre>
         </div>
 
         <!-- التنبيه الهام للمستخدمين -->
-        <div class="tip-box">
+        <div class="tip-box" data-i18n="cloud_tip_box">
           💡 <strong>ملاحظات هامة لتشغيل السحابي:</strong>
           <ul style="margin-right: 20px; margin-top: 6px;">
             <li><strong>إبقاء الصفحة مفتوحة:</strong> يجب إبقاء تبويب Google Colab مفتوحاً في متصفحك لكي يستمر السيرفر في العمل ومعالجة المقاطع.</li>
@@ -786,47 +843,49 @@ print("="*60 + "\n")</pre>
     <!-- Section 2: Local Mode -->
     <section id="local">
       <div class="section-header">
-        <h2>شرح التشغيل المحلي (على حاسوبك)</h2>
-        <p>شغّل المعالجة محلياً عبر معالجك (CPU) أو كرت الشاشة (NVIDIA GPU)</p>
+        <h2 data-i18n="local_sec_title">شرح التشغيل المحلي (على حاسوبك)</h2>
+        <p data-i18n="local_sec_desc">شغّل المعالجة محلياً عبر معالجك (CPU) أو كرت الشاشة (NVIDIA GPU)</p>
       </div>
 
       <div class="step-card">
         <!-- 1. تحميل الملف -->
         <div style="text-align: center; margin-bottom: 25px; padding: 20px; background: rgba(0, 168, 107, 0.05); border-radius: 8px; border: 1px dashed var(--primary);">
-          <h3 style="font-size: 16px; margin-bottom: 10px; color: var(--gold);">الخطوة 1: تحميل ملف السيرفر المحلي جاهزاً</h3>
+          <h3 style="font-size: 16px; margin-bottom: 10px; color: var(--gold);" data-i18n="local_step1_box_title">الخطوة 1: تحميل ملف السيرفر المحلي جاهزاً</h3>
           <button class="btn btn-download" onclick="downloadServerFile()">
-            ⬇️ تحميل ملف local_server.py بنقرة واحدة
+            <span data-i18n="local_download_py_btn">⬇️ تحميل ملف local_server.py بنقرة واحدة</span>
           </button>
         </div>
 
         <!-- محددات النظام والعتاد -->
         <div class="tab-group">
-          <span class="tab-label">حدد نظام التشغيل لديك:</span>
+          <span class="tab-label" data-i18n="local_tab_os_label">حدد نظام التشغيل لديك:</span>
           <div class="tabs">
-            <button class="tab-btn active" onclick="setOS('linux', this)">🐧 Linux (Ubuntu / Arch / CachyOS / Fedora)</button>
-            <button class="tab-btn" onclick="setOS('windows', this)">🪟 Windows (10 / 11)</button>
+            <button class="tab-btn active" id="btnOSLinux" onclick="setOS('linux', this)">🐧 Linux (Ubuntu / Arch / CachyOS / Fedora)</button>
+            <button class="tab-btn" id="btnOSWindows" onclick="setOS('windows', this)">🪟 Windows (10 / 11)</button>
           </div>
         </div>
 
         <div class="tab-group">
-          <span class="tab-label">حدد جهاز المعالجة في حاسوبك:</span>
+          <span class="tab-label" data-i18n="local_tab_hw_label">حدد جهاز المعالجة في حاسوبك:</span>
           <div class="tabs">
-            <button class="tab-btn active" onclick="setHardware('cpu', this)">💻 المعالج (CPU) - مضمون لجميع الحواسيب</button>
-            <button class="tab-btn" onclick="setHardware('gpu', this)">⚡ كرت شاشة NVIDIA (CUDA GPU)</button>
+            <button class="tab-btn active" id="btnHWCPU" onclick="setHardware('cpu', this)">💻 المعالج (CPU) - مضمون لجميع الحواسيب</button>
+            <button class="tab-btn" id="btnHWGPU" onclick="setHardware('gpu', this)">⚡ كرت شاشة NVIDIA (CUDA GPU)</button>
           </div>
         </div>
 
         <!-- 2. التثبيت لأول مرة فقط -->
         <div style="margin-top: 25px;">
           <div class="step-title-badge">
-            <span>⚙️</span> الخطوة 2: التثبيت الأولي (يتم تنفيذه لمرة واحدة فقط)
+            <span>⚙️</span> <span id="setupBadgeTitle" data-i18n="local_step2_title">الخطوة 2: التثبيت الأولي (يتم تنفيذه لمرة واحدة فقط)</span>
           </div>
-          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px;">افتح موجه الأوامر (CMD أو Terminal) في المجلد الذي حمّلت فيه الملف، ونفّذ الأوامر التالية بالترتيب:</p>
+          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px;" data-i18n="local_step2_desc">افتح موجه الأوامر (CMD أو Terminal) في المجلد الذي حمّلت فيه الملف، ونفّذ الأوامر التالية بالترتيب:</p>
 
           <div class="code-container">
             <div class="code-header">
               <span id="setup-title">أوامر التثبيت الأولي</span>
-              <button class="copy-btn" onclick="copyCode('setup-commands', this)">نسخ الأوامر 📋</button>
+              <button class="copy-btn" onclick="copyCode('setup-commands', this)">
+                <span class="copy-text">نسخ الأوامر 📋</span>
+              </button>
             </div>
             <pre id="setup-commands"></pre>
           </div>
@@ -835,22 +894,24 @@ print("="*60 + "\n")</pre>
         <!-- 3. طريقة الاستخدام اليومية الروتينية -->
         <div style="margin-top: 30px;">
           <div class="step-title-badge" style="color: var(--primary-light);">
-            <span>🚀</span> الخطوة 3: طريقة الاستخدام اليومية (كلما أردت استخدام الإضافة)
+            <span>🚀</span> <span id="dailyBadgeTitle" data-i18n="local_step3_title">الخطوة 3: طريقة الاستخدام اليومية (كلما أردت استخدام الإضافة)</span>
           </div>
-          <div class="success-box">
+          <div class="success-box" data-i18n="local_daily_box">
             ✅ <strong>لن تحتاج لتثبيت أي شيء مجدداً!</strong> في كل مرة تفتح فيها حاسوبك وتريد عزل الموسيقى، اكتب هذا الأمر البسيط فقط لتشغيل السيرفر:
           </div>
 
           <div class="code-container">
             <div class="code-header">
               <span id="daily-title">أمر التشغيل اليومي</span>
-              <button class="copy-btn" onclick="copyCode('daily-commands', this)">نسخ الأمر 📋</button>
+              <button class="copy-btn" onclick="copyCode('daily-commands', this)">
+                <span class="copy-text">نسخ الأمر 📋</span>
+              </button>
             </div>
             <pre id="daily-commands"></pre>
           </div>
         </div>
 
-        <div class="tip-box">
+        <div class="tip-box" data-i18n="local_cache_tip">
           💡 <strong>أين تُحفظ المقاطع المعالجة؟</strong><br>
           تُحفظ تلقائياً في مجلد <code>audio_cache</code> بجانب ملف السيرفر. يمكنك تغيير المسار بتمرير الأمر: <code>--cache-dir "مسار_المجلد_الجديد"</code> عند تشغيل السيرفر.
         </div>
@@ -860,62 +921,64 @@ print("="*60 + "\n")</pre>
     <!-- Section 3: Transparency & Uninstallation (الشفافية والحذف الكامل) -->
     <section id="transparency">
       <div class="section-header">
-        <h2>الشفافية وطريقة الحذف الكامل</h2>
-        <p>ماذا يحدث في نظامك؟ وكيف تحذف الأداة كلياً بنقرة واحدة دون ترك أي أثر</p>
+        <h2 data-i18n="trans_sec_title">الشفافية وطريقة الحذف الكامل</h2>
+        <p data-i18n="trans_sec_desc">ماذا يحدث في نظامك؟ وكيف تحذف الأداة كلياً بنقرة واحدة دون ترك أي أثر</p>
       </div>
 
       <div class="step-card">
         <div class="step-title-badge" style="color: var(--primary-light);">
-          <span>🔍</span> 1. ماذا يحدث في نظامك عند التثبيت؟ (Linux & Windows)
+          <span>🔍</span> <span data-i18n="trans_q1_title">1. ماذا يحدث في نظامك عند التثبيت؟ (Linux & Windows)</span>
         </div>
 
         <div class="transparency-grid">
           <div class="transparency-card">
-            <h4>📦 عزل تام (Zero Pollution)</h4>
-            <p>جميع مكتبات الذكاء الاصطناعي (PyTorch, Demucs) تُثبت <strong>داخل مجلد البيئة <code>naqawa_env</code> فقط</strong>، ولا يتم تعديل أو تنزيل أي شيء في بايثون النظام أو مسارات النظام العامة.</p>
+            <h4 data-i18n="trans_card1_title">📦 عزل تام (Zero Pollution)</h4>
+            <p data-i18n="trans_card1_desc">جميع مكتبات الذكاء الاصطناعي (PyTorch, Demucs) تُثبت <strong>داخل مجلد البيئة <code>naqawa_env</code> فقط</strong>، ولا يتم تعديل أو تنزيل أي شيء في بايثون النظام أو مسارات النظام العامة.</p>
           </div>
           <div class="transparency-card">
-            <h4>🧹 لا مساس بالسجل أو الإعدادات</h4>
-            <p>على نظام <strong>Windows</strong> لا يتم تعديل الـ Registry أبداً، وعلى <strong>Linux</strong> لا يتم تعديل أي ملفات ضبط بالنظام (Config files). الأداة محمولة بالكامل (Portable).</p>
+            <h4 data-i18n="trans_card2_title">🧹 لا مساس بالسجل أو الإعدادات</h4>
+            <p data-i18n="trans_card2_desc">على نظام <strong>Windows</strong> لا يتم تعديل الـ Registry أبداً، وعلى <strong>Linux</strong> لا يتم تعديل أي ملفات ضبط بالنظام (Config files). الأداة محمولة بالكامل (Portable).</p>
           </div>
           <div class="transparency-card">
-            <h4>🔒 خصوصية وأمان مطلق</h4>
-            <p>في الخيار المحلي، تُعالج المقاطع وتُحفظ داخل مجلد <code>audio_cache</code> على قرصك، ولا يخرج أي مسار صوتي أو رابط خارج شبكتك الخاصة.</p>
+            <h4 data-i18n="trans_card3_title">🔒 خصوصية وأمان مطلق</h4>
+            <p data-i18n="trans_card3_desc">في الخيار المحلي، تُعالج المقاطع وتُحفظ داخل مجلد <code>audio_cache</code> على قرصك، ولا يخرج أي مسار صوتي أو رابط خارج شبكتك الخاصة.</p>
           </div>
         </div>
 
         <div class="step-title-badge" style="color: var(--danger); margin-top: 20px;">
-          <span>🗑️</span> 2. طريقة الحذف والإزالة الكاملة (Clean Uninstall)
+          <span>🗑️</span> <span data-i18n="trans_q2_title">2. طريقة الحذف والإزالة الكاملة (Clean Uninstall)</span>
         </div>
 
         <ol class="instructions-list">
           <li>
-            <strong>إزالة الإضافة من المتصفح:</strong>
-            اضغط بالزر الأيمن على أيقونة «نقاوة» في شريط أدوات المتصفح واختر <strong>«إزالة من Chrome...» (Remove from Chrome)</strong>.
+            <strong data-i18n="uninst_step1_strong">إزالة الإضافة من المتصفح:</strong>
+            <span data-i18n="uninst_step1_desc">اضغط بالزر الأيمن على أيقونة «نقاوة» في شريط أدوات المتصفح واختر <strong>«إزالة من Chrome...» (Remove from Chrome)</strong>.</span>
           </li>
           <li>
-            <strong>إزالة السيرفر المحلي ومكتباته واستعادة المساحة فوراً:</strong>
-            لحذف كافة الملفات والمكتبات المعزولة ومجلدات الكاش، اختر نظامك ونفّذ أمر الحذف التالي في الطرفية/CMD بمجلد المشروع:
+            <strong data-i18n="uninst_step2_strong">إزالة السيرفر المحلي ومكتباته واستعادة المساحة فوراً:</strong>
+            <span data-i18n="uninst_step2_desc">لحذف كافة الملفات والمكتبات المعزولة ومجلدات الكاش، اختر نظامك ونفّذ أمر الحذف التالي في الطرفية/CMD بمجلد المشروع:</span>
           </li>
         </ol>
 
         <!-- تبويبات الحذف -->
         <div class="tab-group" style="margin-top: 10px;">
           <div class="tabs">
-            <button class="tab-btn danger active" onclick="setUninstallOS('linux', this)">🐧 حذف على Linux</button>
-            <button class="tab-btn danger" onclick="setUninstallOS('windows', this)">🪟 حذف على Windows</button>
+            <button class="tab-btn danger active" id="btnUninstLinux" onclick="setUninstallOS('linux', this)">🐧 حذف على Linux</button>
+            <button class="tab-btn danger" id="btnUninstWindows" onclick="setUninstallOS('windows', this)">🪟 حذف على Windows</button>
           </div>
         </div>
 
         <div class="code-container">
           <div class="code-header">
             <span id="uninstall-title">أمر الحذف الكامل (Linux)</span>
-            <button class="copy-btn" onclick="copyCode('uninstall-commands', this)">نسخ الأمر 📋</button>
+            <button class="copy-btn" onclick="copyCode('uninstall-commands', this)">
+              <span class="copy-text">نسخ الأمر 📋</span>
+            </button>
           </div>
           <pre id="uninstall-commands"></pre>
         </div>
 
-        <div class="danger-box">
+        <div class="danger-box" data-i18n="uninst_danger_box">
           ⚠️ <strong>النتيجة بعد الحذف:</strong> يُحذف مجلد البيئة وكافة المقاطع المعالجة وملفات التخزين المؤقت وملف السيرفر نهائياً، ويعود حاسوبك نظيفاً تماماً بنسبة 100% كما كان قبل التثبيت.
         </div>
       </div>
@@ -924,79 +987,229 @@ print("="*60 + "\n")</pre>
 
   <footer>
     <div class="container">
-      <p>مشروع <strong>نقاوة (Naqawa)</strong> مفتوح المصدر بالكامل لخدمة الجميع 🎧</p>
+      <p data-i18n="footer_text">مشروع <strong>نقاوة (Naqawa)</strong> مفتوح المصدر بالكامل لخدمة الجميع 🎧</p>
     </div>
   </footer>
 
   <script>
+    // قاموس الترجمة الكامل (i18n Dictionary)
+    const i18nData = {
+      ar: {
+        page_title: "نقاوة | Naqawa - عزل الموسيقى بالذكاء الاصطناعي",
+        logo_text: "نقاوة | Naqawa",
+        github_btn: "⭐ المستودع على GitHub",
+        hero_badge: "مشروع مفتوح المصدر ومجاني 100% 🚀",
+        hero_title: "عزل الموسيقى من يوتيوب<br><span>بالذكاء الاصطناعي مع مزامنة لحظية</span>",
+        hero_desc: "أداة مفتوحة المصدر لعزل الآلات الموسيقية عن الصوت البشري في مقاطع اليوتيوب بجودة استوديو احترافية وبدون أي تكاليف.",
+        btn_install_top: "⬇️ تحميل وتثبيت الإضافة مجاناً (ZIP)",
+        btn_cloud_guide: "☁️ شرح التشغيل السحابي",
+        btn_local_guide: "💻 شرح التشغيل المحلي",
+        btn_danger_guide: "🗑️ الشفافية، ماذا يحدث في جهازك؟ وطريقة الحذف الكامل",
+        feat1_title: "⚡ مزامنة تامة 100%",
+        feat1_desc: "نظام Drift Guard يضمن تطابق حركة الشفاه والصوت حتى عند التقديم وتغيير السرعات.",
+        feat2_title: "🧠 Demucs v4 AI",
+        feat2_desc: "يعتمد على أحدث خوارزميات الذكاء الاصطناعي لفصل الترددات بدقة متناهية.",
+        feat3_title: "🔒 خصوصية وسرعة مطلقة",
+        feat3_desc: "خيارات متعددة: تشغيل سحابي مجاني على كروت Tesla T4 أو تشغيل محلي دون إرسال بيانات.",
+        install_sec_title: "تثبيت الإضافة في المتصفح (في 10 ثوانٍ)",
+        install_sec_desc: "متوافق مع جميع متصفحات Chromium (Chrome / Edge / Brave / CachyOS Browser)",
+        install_step1_title: "الخطوة 1:",
+        install_step1_desc: "حمّل ملف الإضافة المضغوط مباشرة من هنا:",
+        install_download_zip_btn: "📦 تحميل ملف naqawa.zip",
+        install_step1_note: "(بعد التحميل، فك الضغط عن الملف في أي مجلد على جهازك).",
+        install_step2_title: "الخطوة 2:",
+        install_step2_desc: "افتح متصفحك وتوجه إلى صفحة إدارة الإضافات: اكتب في شريط العناوين: chrome://extensions (أو edge://extensions في متصفح Edge).",
+        install_step3_title: "الخطوة 3:",
+        install_step3_desc: "فعّل وضع المطور (Developer mode) من الزاوية العلوية، ثم اضغط على زر تحميل حزمة غير مضغوطة (Load unpacked) واختر مجلد الإضافة.",
+        install_success_box: "🎉 <strong>مبروك!</strong> ستظهر أيقونة «نقاوة» في شريط أدوات متصفحك وأصبحت جاهزة للاستخدام دائماً.",
+        cloud_sec_title: "شرح التشغيل السحابي (Google Colab)",
+        cloud_sec_desc: "استخدم كرت شاشة سحابي مجاني (Tesla T4) بدون استهلاك موارد جهازك",
+        cloud_step1: "افتح موقع <a href='https://colab.research.google.com' target='_blank' style='color: var(--primary-light);'>Google Colab</a> وسجّل الدخول بحسابك.",
+        cloud_step2: "اضغط على <strong>New notebook</strong> (دفتر ملاحظات جديد).",
+        cloud_step3: "من القائمة العلوية اضغط على <strong>Edit</strong> ثم اختر <strong>Notebook settings</strong>.",
+        cloud_step4: "من خانة <em>Hardware accelerator</em>، اختر <strong>T4 GPU</strong> ثم اضغط <strong>Save</strong>.",
+        cloud_step5: "الصق كود السيرفر أدناه في الخلية واضغط على زر التشغيل <strong>Run ▶️</strong>:",
+        cloud_tip_box: "💡 <strong>ملاحظات هامة لتشغيل السحابي:</strong><ul style='margin-right: 20px; margin-top: 6px;'><li><strong>إبقاء الصفحة مفتوحة:</strong> يجب إبقاء تبويب Google Colab مفتوحاً في متصفحك لكي يستمر السيرفر في العمل ومعالجة المقاطع.</li><li><strong>استخدام الرابط عدة مرات:</strong> يمكنك استخدام نفس الرابط لعدد لا نهائي من المقاطع طالما الصفحة مفتوحة دون الحاجة لإعادة تشغيل الخلية في كل مرة.</li></ul>",
+        local_sec_title: "شرح التشغيل المحلي (على حاسوبك)",
+        local_sec_desc: "شغّل المعالجة محلياً عبر معالجك (CPU) أو كرت الشاشة (NVIDIA GPU)",
+        local_step1_box_title: "الخطوة 1: تحميل ملف السيرفر المحلي جاهزاً",
+        local_download_py_btn: "⬇️ تحميل ملف local_server.py بنقرة واحدة",
+        local_tab_os_label: "حدد نظام التشغيل لديك:",
+        local_tab_hw_label: "حدد جهاز المعالجة في حاسوبك:",
+        local_tab_hw_cpu: "💻 المعالج (CPU) - مضمون لجميع الحواسيب",
+        local_tab_hw_gpu: "⚡ كرت شاشة NVIDIA (CUDA GPU)",
+        local_step2_title: "الخطوة 2: التثبيت الأولي (يتم تنفيذه لمرة واحدة فقط)",
+        local_step2_desc: "افتح موجه الأوامر (CMD أو Terminal) في المجلد الذي حمّلت فيه الملف، ونفّذ الأوامر التالية بالترتيب:",
+        local_step3_title: "الخطوة 3: طريقة الاستخدام اليومية (كلما أردت استخدام الإضافة)",
+        local_daily_box: "✅ <strong>لن تحتاج لتثبيت أي شيء مجدداً!</strong> في كل مرة تفتح فيها حاسوبك وتريد عزل الموسيقى، اكتب هذا الأمر البسيط فقط لتشغيل السيرفر:",
+        local_cache_tip: "💡 <strong>أين تُحفظ المقاطع المعالجة؟</strong><br>تُحفظ تلقائياً في مجلد <code>audio_cache</code> بجانب ملف السيرفر. يمكنك تغيير المسار بتمرير الأمر: <code>--cache-dir \"مسار_المجلد_الجديد\"</code> عند تشغيل السيرفر.",
+        trans_sec_title: "الشفافية وطريقة الحذف الكامل",
+        trans_sec_desc: "ماذا يحدث في نظامك؟ وكيف تحذف الأداة كلياً بنقرة واحدة دون ترك أي أثر",
+        trans_q1_title: "1. ماذا يحدث في نظامك عند التثبيت؟ (Linux & Windows)",
+        trans_card1_title: "📦 عزل تام (Zero Pollution)",
+        trans_card1_desc: "جميع مكتبات الذكاء الاصطناعي (PyTorch, Demucs) تُثبت <strong>داخل مجلد البيئة <code>naqawa_env</code> فقط</strong>، ولا يتم تعديل أو تنزيل أي شيء في بايثون النظام أو مسارات النظام العامة.",
+        trans_card2_title: "🧹 لا مساس بالسجل أو الإعدادات",
+        trans_card2_desc: "على نظام <strong>Windows</strong> لا يتم تعديل الـ Registry أبداً، وعلى <strong>Linux</strong> لا يتم تعديل أي ملفات ضبط بالنظام (Config files). الأداة محمولة بالكامل (Portable).",
+        trans_card3_title: "🔒 خصوصية وأمان مطلق",
+        trans_card3_desc: "في الخيار المحلي، تُعالج المقاطع وتُحفظ داخل مجلد <code>audio_cache</code> على قرصك، ولا يخرج أي مسار صوتي أو رابط خارج شبكتك الخاصة.",
+        trans_q2_title: "2. طريقة الحذف والإزالة الكاملة (Clean Uninstall)",
+        uninst_step1_strong: "إزالة الإضافة من المتصفح:",
+        uninst_step1_desc: "اضغط بالزر الأيمن على أيقونة «نقاوة» في شريط أدوات المتصفح واختر <strong>«إزالة من Chrome...» (Remove from Chrome)</strong>.",
+        uninst_step2_strong: "إزالة السيرفر المحلي ومكتباته واستعادة المساحة فوراً:",
+        uninst_step2_desc: "لحذف كافة الملفات والمكتبات المعزولة ومجلدات الكاش، اختر نظامك ونفّذ أمر الحذف التالي في الطرفية/CMD بمجلد المشروع:",
+        uninst_tab_linux: "🐧 حذف على Linux",
+        uninst_tab_windows: "🪟 حذف على Windows",
+        uninst_danger_box: "⚠️ <strong>النتيجة بعد الحذف:</strong> يُحذف مجلد البيئة وكافة المقاطع المعالجة وملفات التخزين المؤقت وملف السيرفر نهائياً، ويعود حاسوبك نظيفاً تماماً بنسبة 100% كما كان قبل التثبيت.",
+        footer_text: "مشروع <strong>نقاوة (Naqawa)</strong> مفتوح المصدر بالكامل لخدمة الجميع 🎧",
+        copy_code_btn: "نسخ الكود 📋",
+        copy_cmd_btn: "نسخ الأوامر 📋",
+        copy_single_btn: "نسخ الأمر 📋",
+        copied_text: "✓ تم النسخ"
+      },
+      en: {
+        page_title: "Naqawa | AI Music & Vocal Remover for YouTube",
+        logo_text: "Naqawa",
+        github_btn: "⭐ GitHub Repository",
+        hero_badge: "100% Free & Open Source Project 🚀",
+        hero_title: "Remove Music from YouTube<br><span>with Real-Time AI Vocal Sync</span>",
+        hero_desc: "An open-source browser extension to isolate instruments from vocals in YouTube videos with studio-grade quality and zero cost.",
+        btn_install_top: "⬇️ Download & Install Extension (ZIP)",
+        btn_cloud_guide: "☁️ Cloud Setup (Google Colab)",
+        btn_local_guide: "💻 Local PC Setup",
+        btn_danger_guide: "🗑️ System Transparency & Clean Uninstall Guide",
+        feat1_title: "⚡ 100% Perfect Sync",
+        feat1_desc: "Built-in Drift Guard ensures lip-sync matching even when seeking or changing playback speeds.",
+        feat2_title: "🧠 Demucs v4 AI",
+        feat2_desc: "Powered by state-of-the-art deep learning models for high-fidelity vocal separation.",
+        feat3_title: "🔒 Total Privacy & Flexibility",
+        feat3_desc: "Run on free cloud Tesla T4 GPUs or locally on your CPU/GPU without sending audio anywhere.",
+        install_sec_title: "Install the Extension in 10 Seconds",
+        install_sec_desc: "Compatible with all Chromium browsers (Chrome / Edge / Brave / CachyOS Browser)",
+        install_step1_title: "Step 1:",
+        install_step1_desc: "Download the extension archive directly from here:",
+        install_download_zip_btn: "📦 Download naqawa.zip",
+        install_step1_note: "(Extract the ZIP file into any folder on your computer).",
+        install_step2_title: "Step 2:",
+        install_step2_desc: "Open your browser extensions manager: Type chrome://extensions in the address bar (or edge://extensions in Microsoft Edge).",
+        install_step3_title: "Step 3:",
+        install_step3_desc: "Enable Developer mode in the top corner, click 'Load unpacked', and select the extracted extension folder.",
+        install_success_box: "🎉 <strong>Congrats!</strong> The Naqawa icon will appear in your browser toolbar, ready to use anytime.",
+        cloud_sec_title: "Cloud Setup (Google Colab)",
+        cloud_sec_desc: "Harness free cloud Tesla T4 GPUs with zero impact on your local computer",
+        cloud_step1: "Open <a href='https://colab.research.google.com' target='_blank' style='color: var(--primary-light);'>Google Colab</a> and sign in with your Google account.",
+        cloud_step2: "Click <strong>New notebook</strong>.",
+        cloud_step3: "From the top menu, click <strong>Edit</strong> then select <strong>Notebook settings</strong>.",
+        cloud_step4: "Under <em>Hardware accelerator</em>, choose <strong>T4 GPU</strong> and click <strong>Save</strong>.",
+        cloud_step5: "Paste the Python script below into the code cell and click <strong>Run ▶️</strong>:",
+        cloud_tip_box: "💡 <strong>Important Cloud Notes:</strong><ul style='margin-left: 20px; margin-top: 6px;'><li><strong>Keep tab open:</strong> You must keep the Google Colab browser tab open while listening for the server to process audio.</li><li><strong>Reusable URL:</strong> You can use the same server URL for unlimited videos as long as the Colab tab is running.</li></ul>",
+        local_sec_title: "Local PC Setup (On Your Machine)",
+        local_sec_desc: "Run AI processing locally on your CPU or NVIDIA CUDA GPU",
+        local_step1_box_title: "Step 1: Download the local server script",
+        local_download_py_btn: "⬇️ Download local_server.py (1-Click)",
+        local_tab_os_label: "Select your Operating System:",
+        local_tab_hw_label: "Select your Processing Hardware:",
+        local_tab_hw_cpu: "💻 CPU (Guaranteed for all PCs)",
+        local_tab_hw_gpu: "⚡ NVIDIA GPU (CUDA)",
+        local_step2_title: "Step 2: Initial Setup (Run Once Only)",
+        local_step2_desc: "Open your Terminal / Command Prompt in the folder where you saved local_server.py and run:",
+        local_step3_title: "Step 3: Daily Usage (Whenever you want to use Naqawa)",
+        local_daily_box: "✅ <strong>No reinstall needed!</strong> Every time you open your PC and want to isolate music, simply run this one-line command:",
+        local_cache_tip: "💡 <strong>Where are processed tracks stored?</strong><br>Tracks are cached locally in the <code>audio_cache</code> folder. You can customize the path by passing: <code>--cache-dir \"your_path\"</code> when starting the server.",
+        trans_sec_title: "System Transparency & Clean Uninstall",
+        trans_sec_desc: "What happens on your system? How to completely delete everything in one click with zero leftovers.",
+        trans_q1_title: "1. What happens on your machine during setup? (Linux & Windows)",
+        trans_card1_title: "📦 Zero Pollution",
+        trans_card1_desc: "All AI packages (PyTorch, Demucs) are installed <strong>inside the <code>naqawa_env</code> virtual environment folder only</strong>. System Python remains completely untouched.",
+        trans_card2_title: "🧹 No Registry/Config Alterations",
+        trans_card2_desc: "Zero registry changes on <strong>Windows</strong>, zero system config modifications on <strong>Linux</strong>. Completely portable and self-contained.",
+        trans_card3_title: "🔒 Absolute Privacy",
+        trans_card3_desc: "In local mode, all audio processing and caching occurs strictly on your local disk. No audio or links leave your private network.",
+        trans_q2_title: "2. Clean & Complete Uninstallation Guide",
+        uninst_step1_strong: "Remove the extension from your browser:",
+        uninst_step1_desc: "Right-click the Naqawa icon in your browser toolbar and click <strong>'Remove from Chrome...'</strong>.",
+        uninst_step2_strong: "Delete the local server, virtual environment, and cache:",
+        uninst_step2_desc: "To permanently remove all environment files and cached tracks, select your OS and run this single cleanup command in your project folder:",
+        uninst_tab_linux: "🐧 Delete on Linux",
+        uninst_tab_windows: "🪟 Delete on Windows",
+        uninst_danger_box: "⚠️ <strong>Result after deletion:</strong> The environment folder, cached audio tracks, python caches, and server file are permanently erased. Your PC returns 100% clean.",
+        footer_text: "<strong>Naqawa Project</strong> is 100% Open Source for the Community 🎧",
+        copy_code_btn: "Copy Code 📋",
+        copy_cmd_btn: "Copy Commands 📋",
+        copy_single_btn: "Copy Command 📋",
+        copied_text: "✓ Copied"
+      }
+    };
+
+    let currentLang = localStorage.getItem('naqawa_lang') || 'ar';
     let currentOS = 'linux';
     let currentHW = 'cpu';
     let currentUninstallOS = 'linux';
 
+    // مصفوفة الأوامر للـ Linux والـ Windows
     const commandsData = {
       linux: {
         cpu: {
-          setupTitle: "أوامر التثبيت الأولي (Linux + CPU)",
-          setupCode: `# 1. تثبيت أداة FFmpeg من مدير الحزم
+          setupTitle: { ar: "أوامر التثبيت الأولي (Linux + CPU)", en: "Initial Setup Commands (Linux + CPU)" },
+          setupCode: `# 1. Install FFmpeg via package manager
 sudo pacman -S --needed ffmpeg || sudo apt install -y ffmpeg || sudo dnf install -y ffmpeg
 
-# 2. إنشاء بيئة العمل الافتراضية
+# 2. Create virtual environment
 python3 -m venv naqawa_env
 
-# 3. تثبيت PyTorch للـ CPU وبقية الحزم داخل البيئة مباشرة
+# 3. Install PyTorch (CPU) and dependencies directly into environment
 ./naqawa_env/bin/pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
 ./naqawa_env/bin/pip install fastapi uvicorn yt-dlp demucs soundfile scipy
 
-# 4. تشغيل السيرفر المحلي
+# 4. Start local server
 ./naqawa_env/bin/python local_server.py`,
-          dailyTitle: "أمر التشغيل اليومي (Linux)",
+          dailyTitle: { ar: "أمر التشغيل اليومي (Linux)", en: "Daily Run Command (Linux)" },
           dailyCode: `./naqawa_env/bin/python local_server.py`
         },
         gpu: {
-          setupTitle: "أوامر التثبيت الأولي (Linux + NVIDIA GPU CUDA)",
-          setupCode: `# 1. تثبيت أداة FFmpeg من مدير الحزم
+          setupTitle: { ar: "أوامر التثبيت الأولي (Linux + NVIDIA GPU CUDA)", en: "Initial Setup Commands (Linux + NVIDIA GPU CUDA)" },
+          setupCode: `# 1. Install FFmpeg via package manager
 sudo pacman -S --needed ffmpeg || sudo apt install -y ffmpeg || sudo dnf install -y ffmpeg
 
-# 2. إنشاء بيئة العمل الافتراضية
+# 2. Create virtual environment
 python3 -m venv naqawa_env
 
-# 3. تثبيت PyTorch الداعم لكروت إنفيديا CUDA وبقية الحزم
+# 3. Install PyTorch (NVIDIA CUDA) and dependencies
 ./naqawa_env/bin/pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
 ./naqawa_env/bin/pip install fastapi uvicorn yt-dlp demucs soundfile scipy
 
-# 4. تشغيل السيرفر على كرت الشاشة
+# 4. Start local server on GPU
 ./naqawa_env/bin/python local_server.py`,
-          dailyTitle: "أمر التشغيل اليومي (Linux)",
+          dailyTitle: { ar: "أمر التشغيل اليومي (Linux)", en: "Daily Run Command (Linux)" },
           dailyCode: `./naqawa_env/bin/python local_server.py`
         }
       },
       windows: {
         cpu: {
-          setupTitle: "أوامر التثبيت الأولي (Windows + CPU)",
-          setupCode: `:: 1. إنشاء بيئة العمل الافتراضية
+          setupTitle: { ar: "أوامر التثبيت الأولي (Windows + CPU)", en: "Initial Setup Commands (Windows + CPU)" },
+          setupCode: `:: 1. Create virtual environment
 python -m venv naqawa_env
 
-:: 2. تثبيت PyTorch للـ CPU وبقية الحزم داخل البيئة
+:: 2. Install PyTorch (CPU) and dependencies
 naqawa_env\\Scripts\\pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
 naqawa_env\\Scripts\\pip install fastapi uvicorn yt-dlp demucs soundfile scipy
 
-:: 3. تشغيل السيرفر المحلي
+:: 3. Start local server
 naqawa_env\\Scripts\\python local_server.py`,
-          dailyTitle: "أمر التشغيل اليومي (Windows)",
+          dailyTitle: { ar: "أمر التشغيل اليومي (Windows)", en: "Daily Run Command (Windows)" },
           dailyCode: `naqawa_env\\Scripts\\python local_server.py`
         },
         gpu: {
-          setupTitle: "أوامر التثبيت الأولي (Windows + NVIDIA GPU CUDA)",
-          setupCode: `:: 1. إنشاء بيئة العمل الافتراضية
+          setupTitle: { ar: "أوامر التثبيت الأولي (Windows + NVIDIA GPU CUDA)", en: "Initial Setup Commands (Windows + NVIDIA GPU CUDA)" },
+          setupCode: `:: 1. Create virtual environment
 python -m venv naqawa_env
 
-:: 2. تثبيت PyTorch الداعم لكروت إنفيديا CUDA وبقية الحزم
+:: 2. Install PyTorch (NVIDIA CUDA) and dependencies
 naqawa_env\\Scripts\\pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
 naqawa_env\\Scripts\\pip install fastapi uvicorn yt-dlp demucs soundfile scipy
 
-:: 3. تشغيل السيرفر على كرت الشاشة
+:: 3. Start local server on GPU
 naqawa_env\\Scripts\\python local_server.py`,
-          dailyTitle: "أمر التشغيل اليومي (Windows)",
+          dailyTitle: { ar: "أمر التشغيل اليومي (Windows)", en: "Daily Run Command (Windows)" },
           dailyCode: `naqawa_env\\Scripts\\python local_server.py`
         }
       }
@@ -1004,29 +1217,64 @@ naqawa_env\\Scripts\\python local_server.py`,
 
     const uninstallData = {
       linux: {
-        title: "أمر الحذف الكامل واستعادة المساحة (Linux Terminal)",
-        code: `# حذف مجلد البيئة ومجلدات الكاش وذاكرة بايثون وملف السيرفر بالكامل
+        title: { ar: "أمر الحذف الكامل واستعادة المساحة (Linux Terminal)", en: "Complete Cleanup Command (Linux Terminal)" },
+        code: `# Delete virtual environment, audio cache, python cache, and server script
 rm -rf naqawa_env audio_cache __pycache__ temp_* local_server.py`
       },
       windows: {
-        title: "أمر الحذف الكامل واستعادة المساحة (Windows CMD)",
-        code: `:: حذف مجلدات البيئة والكاش وذاكرة بايثون وملف السيرفر بالكامل
+        title: { ar: "أمر الحذف الكامل واستعادة المساحة (Windows CMD)", en: "Complete Cleanup Command (Windows CMD)" },
+        code: `:: Delete virtual environment, audio cache, python cache, and server script
 rmdir /s /q naqawa_env audio_cache __pycache__
 del local_server.py`
       }
     };
 
+    // تطبيق اللغة وتحديث كامل عناصر الصفحة
+    function applyLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('naqawa_lang', lang);
+      document.documentElement.lang = lang;
+      document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
+
+      // تحديث نص زر التبديل
+      document.getElementById('langToggleBtn').innerText = (lang === 'ar' ? '🌐 English' : '🌐 العربية');
+      document.title = i18nData[lang].page_title;
+
+      // تحديث جميع النصوص التي تحمل data-i18n
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18nData[lang][key]) {
+          el.innerHTML = i18nData[lang][key];
+        }
+      });
+
+      // أزرار محددات العتاد والتبويبات
+      document.getElementById('btnHWCPU').innerText = i18nData[lang].local_tab_hw_cpu;
+      document.getElementById('btnHWGPU').innerText = i18nData[lang].local_tab_hw_gpu;
+      document.getElementById('btnUninstLinux').innerText = i18nData[lang].uninst_tab_linux;
+      document.getElementById('btnUninstWindows').innerText = i18nData[lang].uninst_tab_windows;
+
+      updateLocalCommands();
+      updateUninstallCommands();
+    }
+
+    // زر التبديل التفاعلي
+    function toggleLanguage() {
+      const nextLang = (currentLang === 'ar' ? 'en' : 'ar');
+      applyLanguage(nextLang);
+    }
+
     function updateLocalCommands() {
       const data = commandsData[currentOS][currentHW];
-      document.getElementById('setup-title').innerText = data.setupTitle;
+      document.getElementById('setup-title').innerText = data.setupTitle[currentLang];
       document.getElementById('setup-commands').innerText = data.setupCode;
-      document.getElementById('daily-title').innerText = data.dailyTitle;
+      document.getElementById('daily-title').innerText = data.dailyTitle[currentLang];
       document.getElementById('daily-commands').innerText = data.dailyCode;
     }
 
     function updateUninstallCommands() {
       const data = uninstallData[currentUninstallOS];
-      document.getElementById('uninstall-title').innerText = data.title;
+      document.getElementById('uninstall-title').innerText = data.title[currentLang];
       document.getElementById('uninstall-commands').innerText = data.code;
     }
 
@@ -1056,12 +1304,13 @@ del local_server.py`
       const text = document.getElementById(elementId).innerText;
 
       navigator.clipboard.writeText(text).then(() => {
-        const originalText = btn.innerHTML;
-        btn.innerHTML = "✓ تم النسخ";
+        const textSpan = btn.querySelector('.copy-text') || btn;
+        const originalText = textSpan.innerHTML;
+        textSpan.innerHTML = i18nData[currentLang].copied_text;
         btn.classList.add('copied');
 
         setTimeout(() => {
-          btn.innerHTML = originalText;
+          textSpan.innerHTML = originalText;
           btn.classList.remove('copied');
         }, 2000);
       });
@@ -1164,8 +1413,8 @@ if __name__ == "__main__":
       document.body.removeChild(link);
     }
 
-    updateLocalCommands();
-    updateUninstallCommands();
+    // التهيئة المبدئية للغة والتبويبات
+    applyLanguage(currentLang);
   </script>
 </body>
 </html>
