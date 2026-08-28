@@ -41,6 +41,9 @@
 2. **Open Extensions Manager:** In your browser, navigate to `chrome://extensions` (or `edge://extensions`).
 3. **Load Unpacked:** Enable **Developer mode** in the top corner, click **Load unpacked**, and select the extracted folder.
 
+### ⚠️ Important Note
+Built with AI: This project was conceptualized, tested, and managed by me, with code generated and debugged with the assistance of AI tools.
+
 ### 📖 Official Website & Interactive Guide:
 Visit the official website to explore interactive setup commands and full guides:  
 👉 **[https://naqawa.open-source-project.workers.dev/](https://naqawa.open-source-project.workers.dev/)**
@@ -71,6 +74,9 @@ Visit the official website to explore interactive setup commands and full guides
 1. **حمّل الإضافة:** قم بتحميل ملف [`naqawa.zip`](https://github.com/saborbz/naqawa/raw/main/naqawa.zip) وفك الضغط عنه في أي مجلد على جهازك.
 2. **افتح إدارة الإضافات:** في متصفحك، توجه إلى الرابط `chrome://extensions` (أو `edge://extensions`).
 3. **فعّل وضع المطور:** فعّل **وضع المطور (Developer mode)** من الزاوية العلوية، ثم اضغط على زر **تحميل حزمة غير مضغوطة (Load unpacked)** واختر مجلد الإضافة.
+
+### ⚠️ ملاحظة مهمة
+مبني بمساعدة الذكاء الاصطناعي: تم وضع فكرة هذا المشروع واختباره وإدارته من قبلي، بينما تم توليد الكود وتصحيح الأخطاء البرمجية بمساعدة أدوات الذكاء الاصطناعي.
 
 ### 📖الموقع الرسمي والشرح التفاعلي:
 تفضل بزيارة الموقع الرسمي للاطلاع على الشرح التفاعلي وأوامر التثبيت:  
