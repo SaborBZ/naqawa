@@ -460,11 +460,55 @@
     }
 
     .instructions-list li {
-      margin-bottom: 10px;
+      margin-bottom: 14px;
     }
 
     .instructions-list strong {
       color: var(--text-main);
+    }
+
+    /* صندوق هيكل الملفات وتفاصيلها */
+    .files-detail-box {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 16px;
+      margin: 14px 0;
+      font-size: 13px;
+    }
+
+    .files-detail-box ul {
+      list-style: none;
+      padding: 0;
+      margin: 8px 0 0 0;
+    }
+
+    .files-detail-box li {
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .files-detail-box li:last-child {
+      border-bottom: none;
+    }
+
+    .files-detail-box .file-tag {
+      font-family: 'Fira Code', monospace;
+      color: var(--primary-light);
+      font-weight: bold;
+      background: rgba(0, 168, 107, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .files-detail-box .file-desc {
+      color: var(--text-muted);
+      font-size: 12.5px;
     }
 
     .tip-box {
@@ -634,21 +678,55 @@
       <div class="step-card">
         <ol class="instructions-list">
           <li>
-            <strong data-i18n="install_step1_title">الخطوة 1:</strong> <span data-i18n="install_step1_desc">حمّل ملف الإضافة المضغوط مباشرة من هنا:</span>
+            <strong data-i18n="install_step1_title">الخطوة 1: التحميل وفك الضغط:</strong>
             <br>
-            <a href="https://github.com/saborbz/naqawa/raw/main/naqawa.zip" class="btn btn-download" style="margin: 10px 0; display: inline-flex;">
+            <span data-i18n="install_step1_desc">حمّل ملف الإضافة المضغوط من الزر أدناه وفك الضغط عنه في مجلد مستقل (تأكد أن المجلد يحتوي مباشرة على ملفات الإضافة الأساسية):</span>
+            <br>
+            <a href="https://github.com/saborbz/naqawa/raw/main/naqawa.zip" class="btn btn-download" style="margin: 12px 0; display: inline-flex;">
               <span data-i18n="install_download_zip_btn">📦 تحميل ملف naqawa.zip</span>
             </a>
+
+            <!-- تفصيل ملفات الإضافة داخل المجلد -->
+            <div class="files-detail-box">
+              <strong style="color: var(--gold);" data-i18n="files_box_title">📁 هيكل المجلد المستقل (محتويات الإضافة):</strong>
+              <ul>
+                <li>
+                  <span class="file-tag">manifest.json</span>
+                  <span class="file-desc" data-i18n="file_desc_manifest">ملف التعريف والهوية الأساسي الذي يبحث عنه المتصفح لقراءة إعدادات وصلاحيات الإضافة.</span>
+                </li>
+                <li>
+                  <span class="file-tag">popup.html</span>
+                  <span class="file-desc" data-i18n="file_desc_pop_html">واجهة القائمة المنبثقة التي تفتح عند النقر على أيقونة الإضافة لاختيار (المحلي / السحابي).</span>
+                </li>
+                <li>
+                  <span class="file-tag">popup.js</span>
+                  <span class="file-desc" data-i18n="file_desc_pop_js">الكود البرمجي للقائمة لحفظ رابط السيرفر وإرسال أمر بدء العزل إلى مشغل الفيديو.</span>
+                </li>
+                <li>
+                  <span class="file-tag">content.js</span>
+                  <span class="file-desc" data-i18n="file_desc_content_js">المحرك التنفيذي داخل يوتيوب؛ يقوم بكتم صوت الفيديو الأصلي وتشغيل الصوت النقي ومزامنته فورياً مع الصورة (Drift Guard).</span>
+                </li>
+                <li>
+                  <span class="file-tag">naqawa.png</span>
+                  <span class="file-desc" data-i18n="file_desc_icon">أيقونة وشعار الإضافة الذي يظهر في شريط أدوات المتصفح.</span>
+                </li>
+              </ul>
+            </div>
+          </li>
+
+          <li>
+            <strong data-i18n="install_step2_title">الخطوة 2: الدخول لصفحة الإضافات:</strong>
             <br>
-            <em data-i18n="install_step1_note">(بعد التحميل، فك الضغط عن الملف في أي مجلد على جهازك).</em>
+            <span data-i18n="install_step2_desc">افتح متصفحك واكتب في شريط العناوين: <code>chrome://extensions</code> (أو <code>edge://extensions</code> في متصفح Microsoft Edge).</span>
           </li>
+
           <li>
-            <strong data-i18n="install_step2_title">الخطوة 2:</strong> <span data-i18n="install_step2_desc">افتح متصفحك وتوجه إلى صفحة إدارة الإضافات: اكتب في شريط العناوين: <code>chrome://extensions</code> (أو <code>edge://extensions</code> في متصفح Edge).</span>
-          </li>
-          <li>
-            <strong data-i18n="install_step3_title">الخطوة 3:</strong> <span data-i18n="install_step3_desc">فعّل <strong>وضع المطور (Developer mode)</strong> من الزاوية العلوية، ثم اضغط على زر <strong>تحميل حزمة غير مضغوطة (Load unpacked)</strong> واختر مجلد الإضافة.</span>
+            <strong data-i18n="install_step3_title">الخطوة 3: التفعيل وتحميل المجلد:</strong>
+            <br>
+            <span data-i18n="install_step3_desc">فعّل <strong>وضع المطور (Developer mode)</strong> في الزاوية العلوية، ثم اضغط على زر <strong>تحميل حزمة غير مضغوطة (Load unpacked)</strong>، واختر <strong>المجلد المستقل الذي يحتوي على ملف <code>manifest.json</code> مباشرة</strong>.</span>
           </li>
         </ol>
+
         <div class="success-box" data-i18n="install_success_box">
           🎉 <strong>مبروك!</strong> ستظهر أيقونة «نقاوة» في شريط أدوات متصفحك وأصبحت جاهزة للاستخدام دائماً.
         </div>
@@ -682,28 +760,18 @@
 !fuser -k 8000/tcp 2>/dev/null
 !pkill -f cloudflared 2>/dev/null
 
-# 2. تثبيت الحزم المطلوبة
-!apt-get update -qq && apt-get install -y -qq ffmpeg git
-!pip install -q -U --no-cache-dir yt-dlp demucs soundfile scipy fastapi uvicorn
-!wget -q -nc https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb
-!dpkg -i cloudflared-linux-amd64.deb
+# 2. تثبيت الحزم المطلوبة وأداة النفق
+!wget -q -nc -O /usr/local/bin/cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
+!chmod +x /usr/local/bin/cloudflared
+!pip install -q -U --no-cache-dir yt-dlp demucs soundfile scipy fastapi uvicorn requests
 
-import os
-import glob
-import shutil
-import subprocess
-import threading
-import time
-import re
-import traceback
+import os, glob, shutil, subprocess, threading, time, re
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
-import uvicorn
-import yt_dlp
+import uvicorn, yt_dlp
 
 app = FastAPI()
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -714,128 +782,126 @@ app.add_middleware(
 
 CACHE_DIR = "/content/audio_cache"
 os.makedirs(CACHE_DIR, exist_ok=True)
+COOKIE_FILE = "/content/cookies.txt"
 
-YTDL_BASE_OPTS = {
-    'quiet': True,
-    'no_warnings': True,
-    'extractor_args': {
-        'youtube': {
-            'player_client': ['android', 'ios', 'mweb'],
-            'player_skip': ['webpage', 'configs']
-        }
-    }
-}
+# استخراج ID الفيديو محلياً بدون إرسال أي استعلام ليوتيوب
+def extract_video_id(url: str):
+    patterns = [
+        r'(?:v=|\/)([0-9A-Za-z_-]{11})(?:[&?]|$)',
+        r'youtu\.be\/([0-9A-Za-z_-]{11})',
+        r'embed\/([0-9A-Za-z_-]{11})',
+        r'shorts\/([0-9A-Za-z_-]{11})'
+    ]
+    for pattern in patterns:
+        match = re.search(pattern, url)
+        if match:
+            return match.group(1)
+    return None
 
 @app.get("/")
 def health():
-    return {"status": "online", "name": "Naqawa Engine", "gpu": "Tesla T4"}
+    return {"status": "online", "gpu": "Tesla T4", "has_cookies": os.path.exists(COOKIE_FILE)}
 
 @app.get("/process")
 @app.post("/process")
 async def process_video(url: str):
-    print(f"\n🚀 [1/4] استلام الطلب: {url}")
+    print(f"\n🚀 [طلب معالجة سحابي]: {url}")
 
-    try:
-        with yt_dlp.YoutubeDL(YTDL_BASE_OPTS) as ydl:
-            info = ydl.extract_info(url, download=False)
-            video_id = info.get("id")
-    except Exception as e:
-        print(f"❌ خطأ يوتيوب: {e}")
-        return JSONResponse(status_code=400, content={"detail": f"خطأ في رابط اليوتيوب: {str(e)}"})
+    video_id = extract_video_id(url)
+    if not video_id:
+        return JSONResponse(status_code=400, content={"detail": "رابط الفيديو غير صالح"})
 
     cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
-
     if os.path.exists(cached_file):
-        print(f"⚡ [الكاش] المقطع {video_id} جاهز مسبقاً!")
+        print(f"⚡ [الكاش] المقطع {video_id} معالج مسبقاً! إرسال فوري...")
         return {"status": "ready", "video_id": video_id}
 
     work_dir = f"/content/work_{video_id}"
     os.makedirs(work_dir, exist_ok=True)
+    raw_template = os.path.join(work_dir, "raw_audio.%(ext)s")
 
     try:
-        print("⬇️ [2/4] جاري سحب ملف الصوت الخام...")
-        raw_template = os.path.join(work_dir, "raw_audio.%(ext)s")
+        print(f"⬇️ [1/3] جاري سحب الصوت للمقطع ({video_id})...")
         download_opts = {
-            **YTDL_BASE_OPTS,
             'format': 'bestaudio/best',
             'outtmpl': raw_template,
+            'quiet': True,
+            'no_warnings': True,
         }
-        with yt_dlp.YoutubeDL(download_opts) as ydl:
-            ydl.download([url])
 
-        # العثور على الملف الذي تم تنزيله أياً كان امتداده
+        # استخدام الكوكيز إن وُجد لتفادي الحظر تماماً
+        if os.path.exists(COOKIE_FILE):
+            download_opts['cookiefile'] = COOKIE_FILE
+            print("🍪 تم تفعيل مصادقة الكوكيز بنجاح.")
+
+        with yt_dlp.YoutubeDL(download_opts) as ydl:
+            ydl.download([f"https://www.youtube.com/watch?v={video_id}"])
+
         downloaded = glob.glob(os.path.join(work_dir, "raw_audio.*"))
         if not downloaded:
-            raise Exception("لم يتم العثور على ملف الصوت المحمل من يوتيوب")
+            raise Exception("تعذر العثور على ملف الصوت بعد التنزيل")
         raw_file = downloaded[0]
 
-        # تحويله إلى WAV معياري ليقرأه Demucs بأعلى سرعة
+        print("🎛️ [2/3] تحويل الصوت إلى WAV...")
         input_wav = os.path.join(work_dir, "input.wav")
         subprocess.run(["ffmpeg", "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
 
-        print("🧠 [3/4] تشغيل Demucs بالذكاء الاصطناعي على GPU...")
+        print("🧠 [3/3] تشغيل Demucs بالذكاء الاصطناعي على GPU T4...")
         cmd = ["demucs", "--two-stems", "vocals", "-d", "cuda", "-n", "htdemucs", "-o", work_dir, input_wav]
         res = subprocess.run(cmd, capture_output=True, text=True)
         if res.returncode != 0:
-            print("Demucs Error:", res.stderr)
-            raise Exception(f"Demucs failed: {res.stderr[:200]}")
+            raise Exception(f"خطأ Demucs: {res.stderr[:200]}")
 
-        vocals_path = os.path.join(work_dir, "htdemucs", "input", "vocals.wav")
-        if not os.path.exists(vocals_path):
-            raise Exception("تعذر إيجاد ملف vocals.wav الناتج")
+        vocals_list = glob.glob(os.path.join(work_dir, "**", "vocals.wav"), recursive=True)
+        if not vocals_list:
+            raise Exception("فشل في استخراج vocals.wav")
+        vocals_path = vocals_list[0]
 
-        print("🎛️ [4/4] تصدير وحفظ المسار الصوتي...")
+        print("💾 تصدير وحفظ المسار الصوتي النقي...")
         subprocess.run(["ffmpeg", "-y", "-i", vocals_path, "-b:a", "192k", cached_file], check=True)
 
         shutil.rmtree(work_dir, ignore_errors=True)
-        print(f"✅ تمت معالجة الفيديو بنجاح: {video_id}")
+        print(f"✅ تمت المعالجة بنجاح للمقطع: {video_id}")
         return {"status": "ready", "video_id": video_id}
 
     except Exception as e:
-        traceback.print_exc()
         shutil.rmtree(work_dir, ignore_errors=True)
         print(f"❌ خطأ أثناء المعالجة: {e}")
         return JSONResponse(status_code=500, content={"detail": f"خطأ المعالجة: {str(e)}"})
 
 @app.get("/audio/{video_id}")
-async def stream_audio(video_id: str):
+async def stream(video_id: str):
     file_path = os.path.join(CACHE_DIR, f"{video_id}.mp3")
     if os.path.exists(file_path):
         return FileResponse(file_path, media_type="audio/mpeg")
-    raise HTTPException(status_code=404, detail="الملف الصوتي غير موجود")
+    raise HTTPException(status_code=404, detail="الملف غير موجود")
 
-def start_server():
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")
-
-threading.Thread(target=start_server, daemon=True).start()
+# تشغيل السيرفر
+threading.Thread(target=lambda: uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning"), daemon=True).start()
 time.sleep(2)
 
-print("\n🌐 جاري فتح النفق العام...")
-tunnel = subprocess.Popen(
-    ["cloudflared", "tunnel", "--url", "http://127.0.0.1:8000"],
-    stdout=subprocess.PIPE,
-    stderr=subprocess.STDOUT,
-    text=True
-)
+# إطلاق النفق واستخراج الرابط
+tunnel = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://127.0.0.1:8000"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 
 public_url = None
 for line in tunnel.stdout:
-    match = re.search(r'https://[a-zA-Z0-9-]+\.trycloudflare\.com', line)
-    if match:
-        public_url = match.group(0)
+    m = re.search(r'https://[a-zA-Z0-9-]+\.trycloudflare\.com', line)
+    if m:
+        public_url = m.group(0)
         break
 
 print("\n" + "="*60)
-print(f"🔥 انسخ هذا الرابط وضعه في نافذة إضافة نقاوة:\n{public_url}")
+print(f"🔥 انسخ هذا الرابط وضعه في الإضافة:\n{public_url}")
 print("="*60 + "\n")</pre>
         </div>
 
-        <!-- التنبيه الهام للمستخدمين -->
+        <!-- التنبيه الهام للمستخدمين مع ضبط اتجاه المسار الإنجليزي بدقة -->
         <div class="tip-box" data-i18n="cloud_tip_box">
           💡 <strong>ملاحظات هامة لتشغيل السحابي:</strong>
           <ul style="margin-right: 20px; margin-top: 6px;">
             <li><strong>إبقاء الصفحة مفتوحة:</strong> يجب إبقاء تبويب Google Colab مفتوحاً في متصفحك لكي يستمر السيرفر في العمل ومعالجة المقاطع.</li>
             <li><strong>استخدام الرابط عدة مرات:</strong> يمكنك استخدام نفس الرابط لعدد لا نهائي من المقاطع طالما الصفحة مفتوحة دون الحاجة لإعادة تشغيل الخلية في كل مرة.</li>
+            <li><strong>حل المشاكل وإعادة التعيين:</strong> إذا لم يعمل الكود أو واجهت أي تعثر، اذهب إلى القائمة العلوية <span dir="ltr"><strong>Runtime ➡️ Disconnect and delete runtime</strong></span> (قطع الاتصال وحذف بيئة التشغيل) لتصفير الذاكرة، ثم أعد تشغيل الخلية من جديد لتوليد رابط جديد.</li>
           </ul>
         </div>
       </div>
@@ -874,12 +940,21 @@ print("="*60 + "\n")</pre>
           </div>
         </div>
 
+        <!-- صندوق متطلبات ويندوز للأجهزة الجديدة (يظهر فقط عند اختيار Windows) -->
+        <div class="tip-box" id="winPrereqBox" style="display: none; margin-bottom: 20px;" data-i18n="win_prereq_box">
+          💡 <strong>متطلبات أساسية لأجهزة Windows (لمرة واحدة فقط قبل البدء):</strong>
+          <ul style="margin-right: 20px; margin-top: 6px;">
+            <li><strong>تثبيت بايثون:</strong> تأكد من تثبيت <strong>Python 3.13</strong> (أو إصدار أحدث) مجاناً من <a href="https://apps.microsoft.com/detail/9pnrbtzxmb4z" target="_blank" style="color: var(--gold);">Microsoft Store</a>.</li>
+            <li><strong>حزمة Visual C++ x64:</strong> حمّل وثبّت حزمة <a href="https://aka.ms/vs/17/release/vc_redist.x64.exe" target="_blank" style="color: var(--primary-light);">vc_redist.x64.exe</a> لتشغيل مكتبات الذكاء الاصطناعي بنجاح بدون أخطاء DLL.</li>
+          </ul>
+        </div>
+
         <!-- 2. التثبيت لأول مرة فقط -->
         <div style="margin-top: 25px;">
           <div class="step-title-badge">
             <span>⚙️</span> <span id="setupBadgeTitle" data-i18n="local_step2_title">الخطوة 2: التثبيت الأولي (يتم تنفيذه لمرة واحدة فقط)</span>
           </div>
-          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px;" data-i18n="local_step2_desc">افتح موجه الأوامر (CMD أو Terminal) في المجلد الذي حمّلت فيه الملف، ونفّذ الأوامر التالية بالترتيب:</p>
+          <p style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 10px;" data-i18n="local_step2_desc">افتح موجه الأوامر (CMD أو Terminal)، ونفّذ الأوامر التالية بالترتيب (سيتم إنشاء كل شيء وتشغيله داخل مجلد التنزيلات Downloads تلقائياً):</p>
 
           <div class="code-container">
             <div class="code-header">
@@ -914,7 +989,7 @@ print("="*60 + "\n")</pre>
 
         <div class="tip-box" data-i18n="local_cache_tip">
           💡 <strong>أين تُحفظ المقاطع المعالجة؟</strong><br>
-          تُحفظ تلقائياً في مجلد <code>audio_cache</code> بجانب ملف السيرفر. يمكنك تغيير المسار بتمرير الأمر: <code>--cache-dir "مسار_المجلد_الجديد"</code> عند تشغيل السيرفر.
+          تُحفظ تلقائياً في مجلد <code>audio_cache</code> داخل مجلد التنزيلات بجانب ملف السيرفر. يمكنك تغيير المسار بتمرير الأمر: <code>--cache-dir "مسار_المجلد_الجديد"</code> عند تشغيل السيرفر.
         </div>
       </div>
     </section>
@@ -933,15 +1008,15 @@ print("="*60 + "\n")</pre>
 
         <div class="transparency-grid">
           <div class="transparency-card">
-            <h4 data-i18n="trans_card1_title">📦 عزل تام (Zero Pollution)</h4>
+            <h4>📦 عزل تام (Zero Pollution)</h4>
             <p data-i18n="trans_card1_desc">جميع مكتبات الذكاء الاصطناعي (PyTorch, Demucs) تُثبت <strong>داخل مجلد البيئة <code>naqawa_env</code> فقط</strong>، ولا يتم تعديل أو تنزيل أي شيء في بايثون النظام أو مسارات النظام العامة.</p>
           </div>
           <div class="transparency-card">
-            <h4 data-i18n="trans_card2_title">🧹 لا مساس بالسجل أو الإعدادات</h4>
+            <h4>🧹 لا مساس بالسجل أو الإعدادات</h4>
             <p data-i18n="trans_card2_desc">على نظام <strong>Windows</strong> لا يتم تعديل الـ Registry أبداً، وعلى <strong>Linux</strong> لا يتم تعديل أي ملفات ضبط بالنظام (Config files). الأداة محمولة بالكامل (Portable).</p>
           </div>
           <div class="transparency-card">
-            <h4 data-i18n="trans_card3_title">🔒 خصوصية وأمان مطلق</h4>
+            <h4>🔒 خصوصية وأمان مطلق</h4>
             <p data-i18n="trans_card3_desc">في الخيار المحلي، تُعالج المقاطع وتُحفظ داخل مجلد <code>audio_cache</code> على قرصك، ولا يخرج أي مسار صوتي أو رابط خارج شبكتك الخاصة.</p>
           </div>
         </div>
@@ -950,18 +1025,19 @@ print("="*60 + "\n")</pre>
           <span>🗑️</span> <span data-i18n="trans_q2_title">2. طريقة الحذف والإزالة الكاملة (Clean Uninstall)</span>
         </div>
 
+        <!-- الخطوتان 1 و 2 -->
         <ol class="instructions-list">
           <li>
-            <strong data-i18n="uninst_step1_strong">إزالة الإضافة من المتصفح:</strong>
+            <strong data-i18n="uninst_step1_strong">الخطوة 1: إزالة الإضافة من المتصفح:</strong>
             <span data-i18n="uninst_step1_desc">اضغط بالزر الأيمن على أيقونة «نقاوة» في شريط أدوات المتصفح واختر <strong>«إزالة من Chrome...» (Remove from Chrome)</strong>.</span>
           </li>
           <li>
-            <strong data-i18n="uninst_step2_strong">إزالة السيرفر المحلي ومكتباته واستعادة المساحة فوراً:</strong>
-            <span data-i18n="uninst_step2_desc">لحذف كافة الملفات والمكتبات المعزولة ومجلدات الكاش، اختر نظامك ونفّذ أمر الحذف التالي في الطرفية/CMD بمجلد المشروع:</span>
+            <strong data-i18n="uninst_step2_strong">الخطوة 2: إزالة السيرفر ومكتباته واستعادة المساحة:</strong>
+            <span data-i18n="uninst_step2_desc">لحذف كافة الملفات والمكتبات المعزولة ومجلدات الكاش، اختر نظامك ونفّذ أمر الحذف أدناه في الطرفية/CMD بمجلد المشروع:</span>
           </li>
         </ol>
 
-        <!-- تبويبات الحذف -->
+        <!-- تبويبات وأوامر الحذف لنظامي Linux و Windows -->
         <div class="tab-group" style="margin-top: 10px;">
           <div class="tabs">
             <button class="tab-btn danger active" id="btnUninstLinux" onclick="setUninstallOS('linux', this)">🐧 حذف على Linux</button>
@@ -979,6 +1055,22 @@ print("="*60 + "\n")</pre>
           <pre id="uninstall-commands"></pre>
         </div>
 
+        <!-- الخطوة 3: الترتيب أسفل أوامر الحذف وفوق النتيجة بعد الحذف -->
+        <div style="margin: 18px 0 14px 0; color: var(--text-muted); font-size: 14px;">
+          <strong data-i18n="uninst_step3_strong" style="color: var(--text-main);">الخطوة 3: حذف مجلد الإضافة يدوياً:</strong>
+          <span data-i18n="uninst_step3_desc">الملفات الوحيدة المتبقية على جهازك ستكون مجلد الإضافة الذي قمت بفكه من <code>naqawa.zip</code>، ويمكنك حذفه يدوياً كأي مجلد عادي في أي وقت.</span>
+        </div>
+
+        <!-- تنويه بخصوص البرامج المساعدة في ويندوز (Python و Visual C++) -->
+        <div class="tip-box" id="winUninstallNote" data-i18n="win_uninst_note" style="margin-bottom: 15px;">
+          💡 <strong>بخصوص البرامج المساعدة الإضافية (Windows):</strong>
+          <ul style="margin-right: 20px; margin-top: 6px;">
+            <li><strong>بايثون (Python 3.13+):</strong> إن قمت بتثبيته من <em>Microsoft Store</em>، يمكنك تركه في جهازك للاستفادة منه، أو إلغاء تثبيته بسهولة بالبحث عنه في قائمة ابدأ ⬅️ كليك يمين ⬅️ إلغاء التثبيت (Uninstall).</li>
+            <li><strong>حزمة Visual C++ (vc_redist x64):</strong> يُنصح بشدة بتركها على جهازك لأنها حزمة نظام أساسية ومفيدة للألعاب ومعظم برامج ويندوز، ولكن يمكنك حذفها من لوحة التحكم (Settings ⬅️ Apps ⬅️ Installed Apps) إن أردت ذلك.</li>
+          </ul>
+        </div>
+
+        <!-- صندوق النتيجة بعد الحذف -->
         <div class="danger-box" data-i18n="uninst_danger_box">
           ⚠️ <strong>النتيجة بعد الحذف:</strong> يُحذف مجلد البيئة وكافة المقاطع المعالجة وملفات التخزين المؤقت وملف السيرفر نهائياً، ويعود حاسوبك نظيفاً تماماً بنسبة 100% كما كان قبل التثبيت.
         </div>
@@ -1014,14 +1106,19 @@ print("="*60 + "\n")</pre>
         feat3_desc: "خيارات متعددة: تشغيل سحابي مجاني على كروت Tesla T4 أو تشغيل محلي دون إرسال بيانات.",
         install_sec_title: "تثبيت الإضافة في المتصفح (في 10 ثوانٍ)",
         install_sec_desc: "متوافق مع جميع متصفحات Chromium (Chrome / Edge / Brave / CachyOS Browser)",
-        install_step1_title: "الخطوة 1:",
-        install_step1_desc: "حمّل ملف الإضافة المضغوط مباشرة من هنا:",
+        install_step1_title: "الخطوة 1: التحميل وفك الضغط:",
+        install_step1_desc: "حمّل ملف الإضافة المضغوط من الزر أدناه وفك الضغط عنه في مجلد مستقل (تأكد أن المجلد يحتوي مباشرة على ملفات الإضافة الأساسية):",
         install_download_zip_btn: "📦 تحميل ملف naqawa.zip",
-        install_step1_note: "(بعد التحميل، فك الضغط عن الملف في أي مجلد على جهازك).",
-        install_step2_title: "الخطوة 2:",
-        install_step2_desc: "افتح متصفحك وتوجه إلى صفحة إدارة الإضافات: اكتب في شريط العناوين: chrome://extensions (أو edge://extensions في متصفح Edge).",
-        install_step3_title: "الخطوة 3:",
-        install_step3_desc: "فعّل وضع المطور (Developer mode) من الزاوية العلوية، ثم اضغط على زر تحميل حزمة غير مضغوطة (Load unpacked) واختر مجلد الإضافة.",
+        files_box_title: "📁 هيكل المجلد المستقل (محتويات الإضافة):",
+        file_desc_manifest: "ملف التعريف والهوية الأساسي الذي يبحث عنه المتصفح لقراءة إعدادات وصلاحيات الإضافة.",
+        file_desc_pop_html: "واجهة القائمة المنبثقة التي تفتح عند النقر على أيقونة الإضافة لاختيار (المحلي / السحابي).",
+        file_desc_pop_js: "الكود البرمجي للقائمة لحفظ رابط السيرفر وإرسال أمر بدء العزل إلى مشغل الفيديو.",
+        file_desc_content_js: "المحرك التنفيذي داخل يوتيوب؛ يقوم بكتم صوت الفيديو الأصلي وتشغيل الصوت النقي ومزامنته فورياً مع الصورة (Drift Guard).",
+        file_desc_icon: "أيقونة وشعار الإضافة الذي يظهر في شريط أدوات المتصفح.",
+        install_step2_title: "الخطوة 2: الدخول لصفحة الإضافات:",
+        install_step2_desc: "افتح متصفحك واكتب في شريط العناوين: <code>chrome://extensions</code> (أو <code>edge://extensions</code> في متصفح Edge).",
+        install_step3_title: "الخطوة 3: التفعيل وتحميل المجلد:",
+        install_step3_desc: "فعّل <strong>وضع المطور (Developer mode)</strong> في الزاوية العلوية، ثم اضغط على زر <strong>تحميل حزمة غير مضغوطة (Load unpacked)</strong>، واختر <strong>المجلد المستقل الذي يحتوي على ملف <code>manifest.json</code> مباشرة</strong>.",
         install_success_box: "🎉 <strong>مبروك!</strong> ستظهر أيقونة «نقاوة» في شريط أدوات متصفحك وأصبحت جاهزة للاستخدام دائماً.",
         cloud_sec_title: "شرح التشغيل السحابي (Google Colab)",
         cloud_sec_desc: "استخدم كرت شاشة سحابي مجاني (Tesla T4) بدون استهلاك موارد جهازك",
@@ -1030,7 +1127,7 @@ print("="*60 + "\n")</pre>
         cloud_step3: "من القائمة العلوية اضغط على <strong>Edit</strong> ثم اختر <strong>Notebook settings</strong>.",
         cloud_step4: "من خانة <em>Hardware accelerator</em>، اختر <strong>T4 GPU</strong> ثم اضغط <strong>Save</strong>.",
         cloud_step5: "الصق كود السيرفر أدناه في الخلية واضغط على زر التشغيل <strong>Run ▶️</strong>:",
-        cloud_tip_box: "💡 <strong>ملاحظات هامة لتشغيل السحابي:</strong><ul style='margin-right: 20px; margin-top: 6px;'><li><strong>إبقاء الصفحة مفتوحة:</strong> يجب إبقاء تبويب Google Colab مفتوحاً في متصفحك لكي يستمر السيرفر في العمل ومعالجة المقاطع.</li><li><strong>استخدام الرابط عدة مرات:</strong> يمكنك استخدام نفس الرابط لعدد لا نهائي من المقاطع طالما الصفحة مفتوحة دون الحاجة لإعادة تشغيل الخلية في كل مرة.</li></ul>",
+        cloud_tip_box: "💡 <strong>ملاحظات هامة لتشغيل السحابي:</strong><ul style='margin-right: 20px; margin-top: 6px;'><li><strong>إبقاء الصفحة مفتوحة:</strong> يجب إبقاء تبويب Google Colab مفتوحاً في متصفحك لكي يستمر السيرفر في العمل ومعالجة المقاطع.</li><li><strong>استخدام الرابط عدة مرات:</strong> يمكنك استخدام نفس الرابط لعدد لا نهائي من المقاطع طالما الصفحة مفتوحة دون الحاجة لإعادة تشغيل الخلية في كل مرة.</li><li><strong>حل المشاكل وإعادة التعيين:</strong> إذا لم يعمل الكود أو واجهت أي تعثر، اذهب إلى القائمة العلوية <span dir='ltr'><strong>Runtime ➡️ Disconnect and delete runtime</strong></span> (قطع الاتصال وحذف بيئة التشغيل) لتصفير الذاكرة، ثم أعد تشغيل الخلية من جديد لتوليد رابط جديد.</li></ul>",
         local_sec_title: "شرح التشغيل المحلي (على حاسوبك)",
         local_sec_desc: "شغّل المعالجة محلياً عبر معالجك (CPU) أو كرت الشاشة (NVIDIA GPU)",
         local_step1_box_title: "الخطوة 1: تحميل ملف السيرفر المحلي جاهزاً",
@@ -1038,12 +1135,13 @@ print("="*60 + "\n")</pre>
         local_tab_os_label: "حدد نظام التشغيل لديك:",
         local_tab_hw_label: "حدد جهاز المعالجة في حاسوبك:",
         local_tab_hw_cpu: "💻 المعالج (CPU) - مضمون لجميع الحواسيب",
-        local_tab_hw_gpu: "⚡ كرت شاشة NVIDIA لفصل(CUDA GPU)",
+        local_tab_hw_gpu: "⚡ كرت شاشة NVIDIA (CUDA GPU)",
+        win_prereq_box: "💡 <strong>متطلبات أساسية لأجهزة Windows (لمرة واحدة فقط قبل البدء):</strong><ul style='margin-right: 20px; margin-top: 6px;'><li><strong>تثبيت بايثون:</strong> تأكد من تثبيت <strong>Python 3.13</strong> (أو إصدار أحدث) مجاناً من <a href='https://apps.microsoft.com/detail/9pnrbtzxmb4z' target='_blank' style='color: var(--gold);'>Microsoft Store</a>.</li><li><strong>حزمة Visual C++ x64:</strong> حمّل وثبّت حزمة <a href='https://aka.ms/vs/17/release/vc_redist.x64.exe' target='_blank' style='color: var(--primary-light);'>vc_redist.x64.exe</a> لتشغيل مكتبات الذكاء الاصطناعي بنجاح بدون أخطاء DLL.</li></ul>",
         local_step2_title: "الخطوة 2: التثبيت الأولي (يتم تنفيذه لمرة واحدة فقط)",
-        local_step2_desc: "افتح موجه الأوامر (CMD أو Terminal) في المجلد الذي حمّلت فيه الملف، ونفّذ الأوامر التالية بالترتيب:",
+        local_step2_desc: "افتح موجه الأوامر (CMD أو Terminal)، ونفّذ الأوامر التالية بالترتيب (سيتم إنشاء كل شيء وتشغيله داخل مجلد التنزيلات Downloads تلقائياً):",
         local_step3_title: "الخطوة 3: طريقة الاستخدام اليومية (كلما أردت استخدام الإضافة)",
         local_daily_box: "✅ <strong>لن تحتاج لتثبيت أي شيء مجدداً!</strong> في كل مرة تفتح فيها حاسوبك وتريد فصل الموسيقى، اكتب هذا الأمر البسيط فقط لتشغيل السيرفر:",
-        local_cache_tip: "💡 <strong>أين تُحفظ المقاطع المعالجة؟</strong><br>تُحفظ تلقائياً في مجلد <code>audio_cache</code> بجانب ملف السيرفر. يمكنك تغيير المسار بتمرير الأمر: <code>--cache-dir \"مسار_المجلد_الجديد\"</code> عند تشغيل السيرفر.",
+        local_cache_tip: "💡 <strong>أين تُحفظ المقاطع المعالجة؟</strong><br>تُحفظ تلقائياً في مجلد <code>audio_cache</code> داخل مجلد التنزيلات بجانب ملف السيرفر. يمكنك تغيير المسار بتمرير الأمر: <code>--cache-dir \"مسار_المجلد_الجديد\"</code> عند تشغيل السيرفر.",
         trans_sec_title: "الشفافية وطريقة الحذف الكامل",
         trans_sec_desc: "ماذا يحدث في نظامك؟ وكيف تحذف الأداة كلياً بنقرة واحدة دون ترك أي أثر",
         trans_q1_title: "1. ماذا يحدث في نظامك عند التثبيت؟ (Linux & Windows)",
@@ -1054,10 +1152,13 @@ print("="*60 + "\n")</pre>
         trans_card3_title: "🔒 خصوصية وأمان مطلق",
         trans_card3_desc: "في الخيار المحلي، تُعالج المقاطع وتُحفظ داخل مجلد <code>audio_cache</code> على قرصك، ولا يخرج أي مسار صوتي أو رابط خارج شبكتك الخاصة.",
         trans_q2_title: "2. طريقة الحذف والإزالة الكاملة (Clean Uninstall)",
-        uninst_step1_strong: "إزالة الإضافة من المتصفح:",
+        uninst_step1_strong: "الخطوة 1: إزالة الإضافة من المتصفح:",
         uninst_step1_desc: "اضغط بالزر الأيمن على أيقونة «نقاوة» في شريط أدوات المتصفح واختر <strong>«إزالة من Chrome...» (Remove from Chrome)</strong>.",
-        uninst_step2_strong: "إزالة السيرفر المحلي ومكتباته واستعادة المساحة فوراً:",
-        uninst_step2_desc: "لحذف كافة الملفات والمكتبات المعزولة ومجلدات الكاش، اختر نظامك ونفّذ أمر الحذف التالي في الطرفية/CMD بمجلد المشروع:",
+        uninst_step2_strong: "الخطوة 2: إزالة السيرفر ومكتباته واستعادة المساحة:",
+        uninst_step2_desc: "لحذف كافة الملفات والمكتبات المعزولة ومجلدات الكاش، اختر نظامك ونفّذ أمر الحذف أدناه في الطرفية/CMD بمجلد المشروع:",
+        uninst_step3_strong: "الخطوة 3: حذف مجلد الإضافة يدوياً:",
+        uninst_step3_desc: "الملفات الوحيدة المتبقية على جهازك ستكون مجلد الإضافة الذي قمت بفكه من <code>naqawa.zip</code>، ويمكنك حذفه يدوياً كأي مجلد عادي في أي وقت.",
+        win_uninst_note: "💡 <strong>بخصوص البرامج المساعدة الإضافية (Windows):</strong><ul style='margin-right: 20px; margin-top: 6px;'><li><strong>بايثون (Python 3.13+):</strong> إن قمت بتثبيته من <em>Microsoft Store</em>، يمكنك تركه في جهازك للاستفادة منه، أو إلغاء تثبيته بسهولة بالبحث عنه في قائمة ابدأ ⬅️ كليك يمين ⬅️ إلغاء التثبيت (Uninstall).</li><li><strong>حزمة Visual C++ (vc_redist x64):</strong> يُنصح بشدة بتركها على جهازك لأنها حزمة نظام أساسية ومفيدة للألعاب ومعظم برامج ويندوز، ولكن يمكنك حذفها من لوحة التحكم (Settings ⬅️ Apps ⬅️ Installed Apps) إن أردت ذلك.</li></ul>",
         uninst_tab_linux: "🐧 حذف على Linux",
         uninst_tab_windows: "🪟 حذف على Windows",
         uninst_danger_box: "⚠️ <strong>النتيجة بعد الحذف:</strong> يُحذف مجلد البيئة وكافة المقاطع المعالجة وملفات التخزين المؤقت وملف السيرفر نهائياً، ويعود حاسوبك نظيفاً تماماً بنسبة 100% كما كان قبل التثبيت.",
@@ -1086,14 +1187,19 @@ print("="*60 + "\n")</pre>
         feat3_desc: "Multiple options: Free cloud processing on Tesla T4 GPUs or local execution without sending data.",
         install_sec_title: "Install the Extension in 10 Seconds",
         install_sec_desc: "Compatible with all Chromium browsers (Chrome / Edge / Brave / CachyOS Browser)",
-        install_step1_title: "Step 1:",
-        install_step1_desc: "Download the extension archive directly from here:",
+        install_step1_title: "Step 1: Download & Extract:",
+        install_step1_desc: "Download the extension ZIP archive from the button below and extract it into a standalone folder (ensure the folder directly contains the core extension files):",
         install_download_zip_btn: "📦 Download naqawa.zip",
-        install_step1_note: "(Extract the ZIP file into any folder on your computer).",
-        install_step2_title: "Step 2:",
-        install_step2_desc: "Open your browser extensions manager: Type chrome://extensions in the address bar (or edge://extensions in Microsoft Edge).",
-        install_step3_title: "Step 3:",
-        install_step3_desc: "Enable Developer mode in the top corner, click 'Load unpacked', and select the extracted extension folder.",
+        files_box_title: "📁 Standalone Folder Structure (Extension Contents):",
+        file_desc_manifest: "The core identity and configuration file required by the browser to load extension permissions.",
+        file_desc_pop_html: "The popup interface window that opens when clicking the extension icon to toggle (Local / Cloud).",
+        file_desc_pop_js: "The popup script responsible for saving server URLs and sending isolation commands.",
+        file_desc_content_js: "The execution engine inside YouTube; mutes original audio, plays clean vocal track, and ensures real-time lip sync (Drift Guard).",
+        file_desc_icon: "The official extension logo icon shown in your browser toolbar.",
+        install_step2_title: "Step 2: Open Extensions Manager:",
+        install_step2_desc: "Open your browser and navigate to: <code>chrome://extensions</code> (or <code>edge://extensions</code> in Microsoft Edge).",
+        install_step3_title: "Step 3: Enable Developer Mode & Load Folder:",
+        install_step3_desc: "Enable <strong>Developer mode</strong> in the top corner, click <strong>Load unpacked</strong>, and select the <strong>standalone folder directly containing the <code>manifest.json</code> file</strong>.",
         install_success_box: "🎉 <strong>Congrats!</strong> The Naqawa icon will appear in your browser toolbar, ready to use anytime.",
         cloud_sec_title: "Cloud Setup (Google Colab)",
         cloud_sec_desc: "Harness free cloud Tesla T4 GPUs with zero impact on your local computer",
@@ -1102,7 +1208,7 @@ print("="*60 + "\n")</pre>
         cloud_step3: "From the top menu, click <strong>Edit</strong> then select <strong>Notebook settings</strong>.",
         cloud_step4: "Under <em>Hardware accelerator</em>, choose <strong>T4 GPU</strong> and click <strong>Save</strong>.",
         cloud_step5: "Paste the Python script below into the code cell and click <strong>Run ▶️</strong>:",
-        cloud_tip_box: "💡 <strong>Important Cloud Notes:</strong><ul style='margin-left: 20px; margin-top: 6px;'><li><strong>Keep tab open:</strong> You must keep the Google Colab browser tab open while listening for the server to process audio.</li><li><strong>Reusable URL:</strong> You can use the same server URL for unlimited videos as long as the Colab tab is running.</li></ul>",
+        cloud_tip_box: "💡 <strong>Important Cloud Notes:</strong><ul style='margin-left: 20px; margin-top: 6px;'><li><strong>Keep tab open:</strong> You must keep the Google Colab browser tab open while listening for the server to process audio.</li><li><strong>Reusable URL:</strong> You can use the same server URL for unlimited videos as long as the Colab tab is running.</li><li><strong>Troubleshooting & Reset:</strong> If the code does not work or you encounter any error, go to the top menu <span dir='ltr'><strong>Runtime ➡️ Disconnect and delete runtime</strong></span> to reset the session cleanly, then re-run the cell to generate a fresh link.</li></ul>",
         local_sec_title: "Local PC Setup (On Your Machine)",
         local_sec_desc: "Run AI processing locally on your CPU or NVIDIA CUDA GPU",
         local_step1_box_title: "Step 1: Download the local server script",
@@ -1111,11 +1217,12 @@ print("="*60 + "\n")</pre>
         local_tab_hw_label: "Select your Processing Hardware:",
         local_tab_hw_cpu: "💻 CPU (Guaranteed for all PCs)",
         local_tab_hw_gpu: "⚡ NVIDIA GPU (CUDA)",
+        win_prereq_box: "💡 <strong>Essential Windows Prerequisites (One-time only before starting):</strong><ul style='margin-left: 20px; margin-top: 6px;'><li><strong>Install Python:</strong> Ensure you have <strong>Python 3.13</strong> (or later) installed for free from <a href='https://apps.microsoft.com/detail/9pnrbtzxmb4z' target='_blank' style='color: var(--gold);'>Microsoft Store</a>.</li><li><strong>Visual C++ x64:</strong> Download and install <a href='https://aka.ms/vs/17/release/vc_redist.x64.exe' target='_blank' style='color: var(--primary-light);'>vc_redist.x64.exe</a> to run AI DLL libraries smoothly without errors.</li></ul>",
         local_step2_title: "Step 2: Initial Setup (Run Once Only)",
-        local_step2_desc: "Open your Terminal / Command Prompt in the folder where you saved local_server.py and run:",
+        local_step2_desc: "Open your Terminal / Command Prompt and run the commands below in order (everything will be set up and run inside your Downloads folder automatically):",
         local_step3_title: "Step 3: Daily Usage (Whenever you want to use Naqawa)",
         local_daily_box: "✅ <strong>No reinstall needed!</strong> Every time you open your PC and want to isolate music, simply run this one-line command:",
-        local_cache_tip: "💡 <strong>Where are processed tracks stored?</strong><br>Tracks are cached locally in the <code>audio_cache</code> folder. You can customize the path by passing: <code>--cache-dir \"your_path\"</code> when starting the server.",
+        local_cache_tip: "💡 <strong>Where are processed tracks stored?</strong><br>Tracks are cached locally in the <code>audio_cache</code> folder inside your Downloads folder. You can customize the path by passing: <code>--cache-dir \"your_path\"</code> when starting the server.",
         trans_sec_title: "System Transparency & Clean Uninstall",
         trans_sec_desc: "What happens on your system? How to completely delete everything in one click with zero leftovers.",
         trans_q1_title: "1. What happens on your machine during setup? (Linux & Windows)",
@@ -1130,6 +1237,9 @@ print("="*60 + "\n")</pre>
         uninst_step1_desc: "Right-click the Naqawa icon in your browser toolbar and click <strong>'Remove from Chrome...'</strong>.",
         uninst_step2_strong: "Delete the local server, virtual environment, and cache:",
         uninst_step2_desc: "To permanently remove all environment files and cached tracks, select your OS and run this single cleanup command in your project folder:",
+        uninst_step3_strong: "Delete the extension folder manually:",
+        uninst_step3_desc: "The only remaining files on your machine will be the extracted folder from <code>naqawa.zip</code>, which you can simply delete manually like any regular folder at any time.",
+        win_uninst_note: "💡 <strong>Regarding Supplementary Software (Windows):</strong><ul style='margin-left: 20px; margin-top: 6px;'><li><strong>Python 3.13+:</strong> If installed from the <em>Microsoft Store</em>, you can keep it or easily uninstall it by right-clicking its icon in the Start Menu and selecting 'Uninstall'.</li><li><strong>Visual C++ (vc_redist x64):</strong> It is recommended to keep it as it is a safe system component used by many games and apps, but you can also uninstall it from Windows Settings ➡️ Installed Apps if you wish.</li></ul>",
         uninst_tab_linux: "🐧 Delete on Linux",
         uninst_tab_windows: "🪟 Delete on Windows",
         uninst_danger_box: "⚠️ <strong>Result after deletion:</strong> The environment folder, cached audio tracks, python caches, and server file are permanently erased. Your PC returns 100% clean.",
@@ -1146,72 +1256,82 @@ print("="*60 + "\n")</pre>
     let currentHW = 'cpu';
     let currentUninstallOS = 'linux';
 
-    // مصفوفة الأوامر للـ Linux والـ Windows
+    // مصفوفة الأوامر الموجهة دائماً لمجلد Downloads مع وضع imageio-ffmpeg في سطر منفصل وظاهر لويندوز
     const commandsData = {
       linux: {
         cpu: {
           setupTitle: { ar: "أوامر التثبيت الأولي (Linux + CPU)", en: "Initial Setup Commands (Linux + CPU)" },
-          setupCode: `# 1. Install FFmpeg via package manager
+          setupCode: `# 1. الانتقال لمجلد التنزيلات وتثبيت FFmpeg
+cd ~/Downloads
 sudo pacman -S --needed ffmpeg || sudo apt install -y ffmpeg || sudo dnf install -y ffmpeg
 
-# 2. Create virtual environment
+# 2. إنشاء بيئة العمل الافتراضية
 python3 -m venv naqawa_env
 
-# 3. Install PyTorch (CPU) and dependencies directly into environment
+# 3. تثبيت PyTorch للـ CPU وبقية الحزم داخل البيئة مباشرة
 ./naqawa_env/bin/pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
 ./naqawa_env/bin/pip install fastapi uvicorn yt-dlp demucs soundfile scipy
 
-# 4. Start local server
+# 4. تشغيل السيرفر المحلي
 ./naqawa_env/bin/python local_server.py`,
           dailyTitle: { ar: "أمر التشغيل اليومي (Linux)", en: "Daily Run Command (Linux)" },
-          dailyCode: `./naqawa_env/bin/python local_server.py`
+          dailyCode: `cd ~/Downloads
+./naqawa_env/bin/python local_server.py`
         },
         gpu: {
           setupTitle: { ar: "أوامر التثبيت الأولي (Linux + NVIDIA GPU CUDA)", en: "Initial Setup Commands (Linux + NVIDIA GPU CUDA)" },
-          setupCode: `# 1. Install FFmpeg via package manager
+          setupCode: `# 1. الانتقال لمجلد التنزيلات وتثبيت FFmpeg
+cd ~/Downloads
 sudo pacman -S --needed ffmpeg || sudo apt install -y ffmpeg || sudo dnf install -y ffmpeg
 
-# 2. Create virtual environment
+# 2. إنشاء بيئة العمل الافتراضية
 python3 -m venv naqawa_env
 
-# 3. Install PyTorch (NVIDIA CUDA) and dependencies
+# 3. تثبيت PyTorch الداعم لكروت إنفيديا CUDA وبقية الحزم
 ./naqawa_env/bin/pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
 ./naqawa_env/bin/pip install fastapi uvicorn yt-dlp demucs soundfile scipy
 
-# 4. Start local server on GPU
+# 4. تشغيل السيرفر على كرت الشاشة
 ./naqawa_env/bin/python local_server.py`,
           dailyTitle: { ar: "أمر التشغيل اليومي (Linux)", en: "Daily Run Command (Linux)" },
-          dailyCode: `./naqawa_env/bin/python local_server.py`
+          dailyCode: `cd ~/Downloads
+./naqawa_env/bin/python local_server.py`
         }
       },
       windows: {
         cpu: {
           setupTitle: { ar: "أوامر التثبيت الأولي (Windows + CPU)", en: "Initial Setup Commands (Windows + CPU)" },
-          setupCode: `:: 1. Create virtual environment
+          setupCode: `:: 1. الانتقال لمجلد التنزيلات وإنشاء بيئة العمل الافتراضية
+cd %USERPROFILE%\\Downloads
 python -m venv naqawa_env
 
-:: 2. Install PyTorch (CPU) and dependencies
+:: 2. تثبيت PyTorch للمعالج وكافة الحزم المساعدة
 naqawa_env\\Scripts\\pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu
 naqawa_env\\Scripts\\pip install fastapi uvicorn yt-dlp demucs soundfile scipy
+naqawa_env\\Scripts\\pip install imageio-ffmpeg
 
-:: 3. Start local server
+:: 3. تشغيل السيرفر المحلي
 naqawa_env\\Scripts\\python local_server.py`,
           dailyTitle: { ar: "أمر التشغيل اليومي (Windows)", en: "Daily Run Command (Windows)" },
-          dailyCode: `naqawa_env\\Scripts\\python local_server.py`
+          dailyCode: `cd %USERPROFILE%\\Downloads
+naqawa_env\\Scripts\\python local_server.py`
         },
         gpu: {
           setupTitle: { ar: "أوامر التثبيت الأولي (Windows + NVIDIA GPU CUDA)", en: "Initial Setup Commands (Windows + NVIDIA GPU CUDA)" },
-          setupCode: `:: 1. Create virtual environment
+          setupCode: `:: 1. الانتقال لمجلد التنزيلات وإنشاء بيئة العمل الافتراضية
+cd %USERPROFILE%\\Downloads
 python -m venv naqawa_env
 
-:: 2. Install PyTorch (NVIDIA CUDA) and dependencies
+:: 2. تثبيت PyTorch لكرت الشاشة CUDA وكافة الحزم المساعدة
 naqawa_env\\Scripts\\pip install torch torchaudio --index-url https://download.pytorch.org/whl/cu121
 naqawa_env\\Scripts\\pip install fastapi uvicorn yt-dlp demucs soundfile scipy
+naqawa_env\\Scripts\\pip install imageio-ffmpeg
 
-:: 3. Start local server on GPU
+:: 3. تشغيل السيرفر على كرت الشاشة
 naqawa_env\\Scripts\\python local_server.py`,
           dailyTitle: { ar: "أمر التشغيل اليومي (Windows)", en: "Daily Run Command (Windows)" },
-          dailyCode: `naqawa_env\\Scripts\\python local_server.py`
+          dailyCode: `cd %USERPROFILE%\\Downloads
+naqawa_env\\Scripts\\python local_server.py`
         }
       }
     };
@@ -1219,12 +1339,14 @@ naqawa_env\\Scripts\\python local_server.py`,
     const uninstallData = {
       linux: {
         title: { ar: "أمر الحذف الكامل واستعادة المساحة (Linux Terminal)", en: "Complete Cleanup Command (Linux Terminal)" },
-        code: `# Delete virtual environment, audio cache, python cache, and server script
+        code: `# الانتقال لمجلد التنزيلات وحذف كافة الملفات والمجلدات المعزولة
+cd ~/Downloads
 rm -rf naqawa_env audio_cache __pycache__ temp_* local_server.py`
       },
       windows: {
         title: { ar: "أمر الحذف الكامل واستعادة المساحة (Windows CMD)", en: "Complete Cleanup Command (Windows CMD)" },
-        code: `:: Delete virtual environment, audio cache, python cache, and server script
+        code: `:: الانتقال لمجلد التنزيلات وحذف كافة الملفات والمجلدات المعزولة
+cd %USERPROFILE%\\Downloads
 rmdir /s /q naqawa_env audio_cache __pycache__
 del local_server.py`
       }
@@ -1271,6 +1393,12 @@ del local_server.py`
       document.getElementById('setup-commands').innerText = data.setupCode;
       document.getElementById('daily-title').innerText = data.dailyTitle[currentLang];
       document.getElementById('daily-commands').innerText = data.dailyCode;
+
+      // إظهار صندوق متطلبات ويندوز عند اختيار Windows فقط
+      const winBox = document.getElementById('winPrereqBox');
+      if (winBox) {
+        winBox.style.display = (currentOS === 'windows') ? 'block' : 'none';
+      }
     }
 
     function updateUninstallCommands() {
@@ -1317,12 +1445,37 @@ del local_server.py`
       });
     }
 
-    function downloadServerFile() {
-      const serverPyContent = `import os, sys, glob, shutil, argparse, subprocess, torch
+    // دالة التحميل الديناميكية: تسحب أحدث نسخة مباشرة من مستودع GitHub تلقائياً مع نسخة احتياطية
+    async function downloadServerFile() {
+      const githubRawUrl = "https://raw.githubusercontent.com/saborbz/naqawa/main/local_server.py";
+
+      try {
+        const response = await fetch(githubRawUrl + "?t=" + Date.now());
+        if (!response.ok) throw new Error("تعذر جلب الملف من GitHub");
+
+        const serverPyContent = await response.text();
+        const blob = new Blob([serverPyContent], { type: "text/x-python;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "local_server.py";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } catch (err) {
+        console.warn("جاري استخدام النسخة الاحتياطية المدمجة:", err);
+        const fallbackContent = `import os, sys, glob, shutil, argparse, subprocess, torch
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 import uvicorn, yt_dlp
+
+FFMPEG_BIN = shutil.which("ffmpeg")
+if not FFMPEG_BIN:
+    try:
+        import imageio_ffmpeg
+        FFMPEG_BIN = imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        FFMPEG_BIN = "ffmpeg"
 
 DEFAULT_CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "audio_cache")
 parser = argparse.ArgumentParser(description="Naqawa Local Engine")
@@ -1336,6 +1489,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print("="*60)
 print(f"🔥 تم تشغيل محرك نقاوة المحلي | المعالجة عبر: [{DEVICE.upper()}]")
 print(f"📁 مجلد الحفظ: {CACHE_DIR}")
+print(f"🎬 مسار FFmpeg: {FFMPEG_BIN}")
 print("="*60)
 
 app = FastAPI()
@@ -1370,7 +1524,7 @@ async def process_video(url: str):
         with yt_dlp.YoutubeDL(download_opts) as ydl: ydl.download([url])
         raw_file = glob.glob(os.path.join(work_dir, "raw.*"))[0]
         input_wav = os.path.join(work_dir, "input.wav")
-        subprocess.run(["ffmpeg", "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
+        subprocess.run([FFMPEG_BIN, "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
 
         cmd = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "-o", work_dir, input_wav]
         res = subprocess.run(cmd, capture_output=True, text=True)
@@ -1388,7 +1542,7 @@ async def process_video(url: str):
             raise Exception("تعذر العثور على ملف vocals.wav الناتج")
         vocals_path = vocals_list[0]
 
-        subprocess.run(["ffmpeg", "-y", "-i", vocals_path, "-b:a", "192k", cached_file], check=True)
+        subprocess.run([FFMPEG_BIN, "-y", "-i", vocals_path, "-b:a", "192k", cached_file], check=True)
         shutil.rmtree(work_dir, ignore_errors=True)
         print(f"✅ تمت المعالجة بنجاح: {video_id}")
         return {"status": "ready", "video_id": video_id}
@@ -1405,13 +1559,14 @@ async def stream(video_id: str):
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning")`;
 
-      const blob = new Blob([serverPyContent], { type: "text/x-python;charset=utf-8" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "local_server.py";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+        const blob = new Blob([fallbackContent], { type: "text/x-python;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "local_server.py";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     }
 
     // التهيئة المبدئية للغة والتبويبات
