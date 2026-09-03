@@ -43,7 +43,7 @@ Built with AI: This project was conceptualized, tested, and managed by me, with 
 
 ### 📖 Official Website & Interactive Guide:
 Visit the official website to explore interactive setup commands and full guides:  
-👉 **[https://naqawa.open-source-project.workers.dev/](https://naqawa.open-source-project.workers.dev/)**
+👉 **[https://saborbz.github.io/naqawa/](https://saborbz.github.io/naqawa/)**
 
 ---
 
@@ -74,6 +74,6 @@ Visit the official website to explore interactive setup commands and full guides
 
 ### 📖الموقع الرسمي والشرح التفاعلي:
 تفضل بزيارة الموقع الرسمي للاطلاع على الشرح التفاعلي وأوامر التثبيت:  
-👉 **[https://naqawa.open-source-project.workers.dev/](https://naqawa.open-source-project.workers.dev/)**
+👉 **[https://saborbz.github.io/naqawa/](https://saborbz.github.io/naqawa/)**
 
 </div>
