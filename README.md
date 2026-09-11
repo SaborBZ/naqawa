@@ -1,7 +1,7 @@
 <div align="center">
 
 # 🎧 نقاوة | Naqawa
-### AI Music & Vocal Remover for YouTube
+### Music Remover for YouTube
 
 <p align="center">
   <a href="#-english"><b>English</b></a> •
