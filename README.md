@@ -24,11 +24,12 @@
 > **A 100% free and open-source browser extension to isolate music and instruments from YouTube videos using AI, with video-audio synchronization.**
 
 ### ✨ Key Features
+- 💻 **Local Processing:** Run directly on your machine using your **CPU** or **NVIDIA GPU (CUDA)** without uploading any data
 - ⚡ **Synchronization (Drift Guard):** Matches video and audio timing even when seeking, scrubbing, or changing playback speed.
 - 🧠 **AI-Powered (Demucs v4):** Isolates musical instruments with good accuracy while keeping human vocals clear.
-- ☁️ **Cloud Processing Support:** Provides code that enables fast processing using free Google Colab GPUs (Tesla T4 GPU).
-- 💻 **Local Processing:** Run directly on your machine using your **CPU** or **NVIDIA GPU (CUDA)** without uploading any data.
-
+- ☁️ **Cloud Processing Support:** Provides code that enables fast processing using free Google Colab GPUs (Tesla T4 GPU)..
+- 🖥️ **Windows/Linux Compatibility:** The extension works on Windows 10/11, and most Linux distributions.
+  
 ### ⚠️ Known Issues & Limitations
 - ⏱️ **Slight Audio-Video Sync Delay:** A minor delay in audio/video synchronization may occur when seeking or fast-forwarding the video.
 - 🎵 **Residual Music Artifacts:** Some background musical tones/artifacts may still be audible, as AI vocal separation is not 100% perfect.
@@ -55,10 +56,11 @@ Visit the official website to explore interactive setup commands and full guides
 > **إضافة متصفح مفتوحة المصدر ومجانية 100% لعزل الموسيقى والآلات عن مقاطع اليوتيوب بالذكاء الاصطناعي مع مزامنة الصوت والصورة.**
 
 ### ✨ المميزات الرئيسية
+- 💻 **تشغيل محلي بخصوصية مطلقة:** تشغيل مباشر على حاسوبك عبر المعالج (**CPU**) أو كرت الشاشة (**NVIDIA CUDA GPU**) دون رفع أي بيانات.
 - ⚡ **المزامنة (Drift Guard):** تطابق بين الفيديو و الصوت حتى عند التقديم وتغيير سرعات التشغيل.
 - 🧠 **الذكاء اصطناعي (Demucs v4):** عزل الآلات الموسيقية بدقة جيدة مع الحفاظ على نقاء الصوت البشري.
 - ☁️ **دعم التشغيل السحابي:** توفير كود برمجي يسمح بمعالجة سريعة عبر كروت شاشة Google Colab مجاناً (Tesla T4 GPU).
-- 💻 **تشغيل محلي بخصوصية مطلقة:** تشغيل مباشر على حاسوبك عبر المعالج (**CPU**) أو كرت الشاشة (**NVIDIA CUDA GPU**) دون رفع أي بيانات.
+- 🖥️ **توافق Windows/Linux:** تعمل الإضافة على Windows 10 وWindows 11 ومعظم توزيعات Linux.
 
 ### ⚠️ المشاكل المعروفة والعيوب الحالية
 - ⏱️ **تأخير بسيط في المزامنة:** قد يحدث تأخير بسيط في مزامنة الصوت والصورة عند تقديم الفيديو.
