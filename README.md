@@ -42,6 +42,10 @@
 ### ⚠️ Important Note
 Built with AI: This project was conceptualized, tested, and managed by me, with code generated and debugged with the assistance of AI tools.
 
+### ⚖️ Ethical & Legal Notice (Local Cache)
+- **Not a Downloader:** This tool is strictly a real-time in-browser filter, not an audio downloader.
+- **Obfuscated Storage:** Cached audio files (`.nq`) have scrambled binary headers and cannot be played with media players (VLC, etc.). Tampering with these files for offline hoarding violates the intended purpose of this project.
+
 ### 📖 Official Website & Interactive Guide:
 Visit the official website to explore interactive setup commands and full guides:  
 👉 **[https://naqawa.pages.dev/](https://naqawa.pages.dev/)**
@@ -72,7 +76,11 @@ Visit the official website to explore interactive setup commands and full guides
 3. **فعّل وضع المطور:** فعّل **وضع المطور (Developer mode)** من الزاوية العلوية، ثم اضغط على زر **تحميل حزمة غير مضغوطة (Load unpacked)** واختر مجلد الإضافة.
 
 ### ⚠️ ملاحظة مهمة
-مبني بمساعدة الذكاء الاصطناعي: تم وضع فكرة هذا المشروع واختباره وإدارته من قبلي، بينما تم توليد الكود وتصحيح الأخطاء البرمجية بمساعدة أدوات الذكاء الاصطناعي.
+مبني بمساعدة الذكاء الاصطناعي: تم وضع فكرة هذا المشروع واختباره وإدارته من قبلي، بينما تم توليد الكود وتصحيح الأخطاء البرمجية بمساعدة أدوات الذكاء الاصطناعي
+
+### ⚖️ إخلاء مسؤولية واستخدام الكاش المحلي
+- **ليست أداة تنزيل:** هذا المشروع مصمم حصرياً كمرشح صوتي لحظي داخل المتصفح، وليس برنامجاً لسحب أو حفظ المقاطع.
+- **حماية الكاش:** ملفات التخزين المؤقت (`.nq`) تالفة الترويسة برمجياً ولا تعمل على مشغلات الوسائط (مثل VLC). محاولة فكها أو استخراجها واستماعها خارج المتصفح يتعارض كلياً مع الغرض الأخلاقي للمشروع..
 
 ### 📖الموقع الرسمي والشرح التفاعلي:
 تفضل بزيارة الموقع الرسمي للاطلاع على الشرح التفاعلي وأوامر التثبيت:  
