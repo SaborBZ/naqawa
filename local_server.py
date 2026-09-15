@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 import uvicorn, yt_dlp
 
-# تحديد مسار FFmpeg تلقائياً
 FFMPEG_BIN = shutil.which("ffmpeg")
 if not FFMPEG_BIN:
     try:
@@ -34,15 +33,16 @@ app.add_middleware(
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 
+# مشغلات موثوقة محلياً
 YTDL_OPTS = {
     'quiet': True,
     'no_warnings': True,
     'extractor_args': {
         'youtube': {
-            'player_client': ['android', 'ios', 'mweb'],
+            'player_client': ['tv_downgraded', 'tv', 'android', 'mweb'],
             'player_skip': ['webpage', 'configs']
         }
     }
@@ -54,7 +54,7 @@ def health():
 
 @app.get("/process")
 @app.post("/process")
-async def process_video(url: str):
+def process_video(url: str):
     print(f"\n🚀 [طلب محلي]: {url}")
     try:
         with yt_dlp.YoutubeDL(YTDL_OPTS) as ydl:
@@ -80,12 +80,12 @@ async def process_video(url: str):
         input_wav = os.path.join(work_dir, "input.wav")
         subprocess.run([FFMPEG_BIN, "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
 
-        cmd = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "-o", work_dir, input_wav]
+        cmd = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "--segment", "7", "-o", work_dir, input_wav]
         res = subprocess.run(cmd, capture_output=True, text=True)
 
         if res.returncode != 0 and DEVICE == "cuda":
             print("⚠️ تحويل تلقائي للمعالج CPU...")
-            cmd_cpu = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", "cpu", "-n", "htdemucs", "-o", work_dir, input_wav]
+            cmd_cpu = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", "cpu", "-n", "htdemucs", "--segment", "7", "-o", work_dir, input_wav]
             res = subprocess.run(cmd_cpu, capture_output=True, text=True)
 
         if res.returncode != 0:
@@ -104,8 +104,15 @@ async def process_video(url: str):
         shutil.rmtree(work_dir, ignore_errors=True)
         return JSONResponse(status_code=500, content={"detail": str(e)})
 
+@app.get("/status/{video_id}")
+def status(video_id: str):
+    cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
+    if os.path.exists(cached_file):
+        return {"status": "ready", "video_id": video_id}
+    return JSONResponse(status_code=404, content={"status": "error", "detail": "المقطع غير موجود"})
+
 @app.get("/audio/{video_id}")
-async def stream(video_id: str):
+def stream(video_id: str):
     file_path = os.path.join(CACHE_DIR, f"{video_id}.mp3")
     if os.path.exists(file_path):
         return FileResponse(file_path, media_type="audio/mpeg")

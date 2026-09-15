@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="9fmrE9ktEVonHsWxF7kU3nlM-iT4y_y2urc8RaoGNwY" />
   <title id="pageTitle">نقاوة | Naqawa - فصل الموسيقى بالذكاء الاصطناعي</title>
   <link rel="icon" type="image/png" href="naqawa.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -180,7 +179,6 @@
       margin: 0 auto 32px auto;
     }
 
-    /* الترتيب الهرمي للأزرار */
     .pyramid-container {
       display: flex;
       flex-direction: column;
@@ -468,7 +466,6 @@
       color: var(--text-main);
     }
 
-    /* صندوق هيكل الملفات وتفاصيلها */
     .files-detail-box {
       background: var(--code-bg);
       border: 1px solid var(--card-border);
@@ -607,7 +604,6 @@
         </div>
       </a>
       <div class="header-actions">
-        <!-- زر التبديل بين اللغتين -->
         <button id="langToggleBtn" class="lang-btn" onclick="toggleLanguage()">
           🌐 English
         </button>
@@ -627,14 +623,12 @@
 
       <!-- الهيكل الهرمي للأزرار -->
       <div class="pyramid-container">
-        <!-- قمة الهرم: تحميل الإضافة -->
         <div class="pyramid-top">
           <a href="#install" class="btn btn-main" data-i18n="btn_install_top">
             ⬇️ تحميل وتثبيت الإضافة مجاناً (ZIP)
           </a>
         </div>
 
-        <!-- قاعدة الهرم: الشرحان -->
         <div class="pyramid-bottom">
           <a href="#cloud" class="btn btn-primary" data-i18n="btn_cloud_guide">
             ☁️ شرح التشغيل السحابي
@@ -644,7 +638,6 @@
           </a>
         </div>
 
-        <!-- الخانة الحمراء تحت الشرحين -->
         <div class="pyramid-danger">
           <a href="#transparency" class="btn btn-danger-link" data-i18n="btn_danger_guide">
             🗑️ الشفافية، ماذا يحدث في جهازك؟ وطريقة الحذف الكامل
@@ -657,7 +650,7 @@
     <div class="features">
       <div class="feature-card">
         <h3 data-i18n="feat1_title">⚡ المزامنة</h3>
-        <p data-i18n="feat1_desc">نظام Drift Guard  يطابق حركة الصوت و الصورة حتى عند التقديم وتغيير السرعات.</p>
+        <p data-i18n="feat1_desc">نظام Drift Guard يطابق حركة الصوت و الصورة حتى عند التقديم وتغيير السرعات.</p>
       </div>
       <div class="feature-card">
         <h3 data-i18n="feat2_title">🧠 Demucs v4 AI</h3>
@@ -687,7 +680,6 @@
               <span data-i18n="install_download_zip_btn">📦 تحميل ملف naqawa.zip</span>
             </a>
 
-            <!-- تفصيل ملفات الإضافة داخل المجلد -->
             <div class="files-detail-box">
               <strong style="color: var(--gold);" data-i18n="files_box_title">📁 هيكل المجلد المستقل (محتويات الإضافة):</strong>
               <ul>
@@ -752,27 +744,29 @@
 
         <div class="code-container">
           <div class="code-header">
-            <span>Colab Script</span>
+            <span>Colab Script (المحدث والمقاوم للبوتات وانقطاع المهلة)</span>
             <button class="copy-btn" onclick="copyCode('colab-code', this)">
               <span class="copy-text">نسخ الكود 📋</span>
             </button>
           </div>
-          <pre id="colab-code"># 1. إغلاق أي جلسات قديمة
+          <pre id="colab-code"># 1. إغلاق أي جلسات سابقة وتحرير المنافذ
 !fuser -k 8000/tcp 2>/dev/null
 !pkill -f cloudflared 2>/dev/null
 
-# 2. تثبيت الحزم المطلوبة وأداة النفق
+# 2. تثبيت الحزم المطلوبة وتنزيل نفق Cloudflare
 !wget -q -nc -O /usr/local/bin/cloudflared https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64
 !chmod +x /usr/local/bin/cloudflared
-!pip install -q -U --no-cache-dir yt-dlp demucs soundfile scipy fastapi uvicorn requests
+!pip install -q -U --no-cache-dir --pre "yt-dlp[default]"
+!pip install -q -U --no-cache-dir demucs soundfile scipy fastapi uvicorn requests
 
-import os, glob, shutil, subprocess, threading, time, re
-from fastapi import FastAPI, HTTPException
+import os, glob, shutil, subprocess, threading, time, re, gc
+import torch
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 import uvicorn, yt_dlp
 
-app = FastAPI()
+app = FastAPI(title="Naqawa Cloud Engine")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -784,8 +778,8 @@ app.add_middleware(
 CACHE_DIR = "/content/audio_cache"
 os.makedirs(CACHE_DIR, exist_ok=True)
 COOKIE_FILE = "/content/cookies.txt"
+task_status = {}
 
-# استخراج ID الفيديو محلياً بدون إرسال أي استعلام ليوتيوب
 def extract_video_id(url: str):
     patterns = [
         r'(?:v=|\/)([0-9A-Za-z_-]{11})(?:[&?]|$)',
@@ -793,95 +787,136 @@ def extract_video_id(url: str):
         r'embed\/([0-9A-Za-z_-]{11})',
         r'shorts\/([0-9A-Za-z_-]{11})'
     ]
-    for pattern in patterns:
-        match = re.search(pattern, url)
-        if match:
-            return match.group(1)
+    for p in patterns:
+        m = re.search(p, url)
+        if m:
+            return m.group(1)
     return None
 
-@app.get("/")
-def health():
-    return {"status": "online", "gpu": "Tesla T4", "has_cookies": os.path.exists(COOKIE_FILE)}
+def download_audio_safe(video_id: str, raw_template: str, work_dir: str):
+    client_profiles = [
+        ['tv_downgraded', 'tv'],
+        ['web_embedded'],
+        ['android_vr', 'mweb'],
+        ['ios', 'android']
+    ]
+    last_err = ""
+    for client in client_profiles:
+        try:
+            download_opts = {
+                'format': 'bestaudio/best',
+                'outtmpl': raw_template,
+                'quiet': True,
+                'no_warnings': True,
+                'source_address': '0.0.0.0',
+                'extractor_args': {
+                    'youtube': {
+                        'player_client': client,
+                        'player_skip': ['webpage', 'configs']
+                    }
+                }
+            }
+            if os.path.exists(COOKIE_FILE):
+                download_opts['cookiefile'] = COOKIE_FILE
 
-@app.get("/process")
-@app.post("/process")
-async def process_video(url: str):
-    print(f"\n🚀 [طلب معالجة سحابي]: {url}")
+            with yt_dlp.YoutubeDL(download_opts) as ydl:
+                ydl.download([f"https://www.youtube.com/watch?v={video_id}"])
 
-    video_id = extract_video_id(url)
-    if not video_id:
-        return JSONResponse(status_code=400, content={"detail": "رابط الفيديو غير صالح"})
+            downloaded = glob.glob(os.path.join(work_dir, "raw_audio.*"))
+            if downloaded:
+                return downloaded[0]
+        except Exception as e:
+            last_err = str(e)
+            continue
+    raise Exception(f"تعذر سحب الصوت: {last_err}")
 
+def background_processor(video_id: str, url: str):
     cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
-    if os.path.exists(cached_file):
-        print(f"⚡ [الكاش] المقطع {video_id} معالج مسبقاً! إرسال فوري...")
-        return {"status": "ready", "video_id": video_id}
-
     work_dir = f"/content/work_{video_id}"
     os.makedirs(work_dir, exist_ok=True)
     raw_template = os.path.join(work_dir, "raw_audio.%(ext)s")
 
     try:
-        print(f"⬇️ [1/3] جاري سحب الصوت للمقطع ({video_id})...")
-        download_opts = {
-            'format': 'bestaudio/best',
-            'outtmpl': raw_template,
-            'quiet': True,
-            'no_warnings': True,
-        }
+        task_status[video_id] = {"status": "processing", "stage": "⬇️ سحب الصوت بدون قيود..."}
+        raw_file = download_audio_safe(video_id, raw_template, work_dir)
 
-        # استخدام الكوكيز إن وُجد لتفادي الحظر تماماً
-        if os.path.exists(COOKIE_FILE):
-            download_opts['cookiefile'] = COOKIE_FILE
-            print("🍪 تم تفعيل مصادقة الكوكيز بنجاح.")
-
-        with yt_dlp.YoutubeDL(download_opts) as ydl:
-            ydl.download([f"https://www.youtube.com/watch?v={video_id}"])
-
-        downloaded = glob.glob(os.path.join(work_dir, "raw_audio.*"))
-        if not downloaded:
-            raise Exception("تعذر العثور على ملف الصوت بعد التنزيل")
-        raw_file = downloaded[0]
-
-        print("🎛️ [2/3] تحويل الصوت إلى WAV...")
+        task_status[video_id] = {"status": "processing", "stage": "🎛️ تجهيز ملف الترددات (WAV)..."}
         input_wav = os.path.join(work_dir, "input.wav")
         subprocess.run(["ffmpeg", "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
 
-        print("🧠 [3/3] تشغيل Demucs بالذكاء الاصطناعي على GPU T4...")
-        cmd = ["demucs", "--two-stems", "vocals", "-d", "cuda", "-n", "htdemucs", "-o", work_dir, input_wav]
+        task_status[video_id] = {"status": "processing", "stage": "🧠 فصل الموسيقى بذكاء Demucs v4..."}
+        cmd = [
+            "demucs", "--two-stems", "vocals",
+            "-d", "cuda" if torch.cuda.is_available() else "cpu",
+            "-n", "htdemucs",
+            "--segment", "7",
+            "-o", work_dir,
+            input_wav
+        ]
         res = subprocess.run(cmd, capture_output=True, text=True)
         if res.returncode != 0:
             raise Exception(f"خطأ Demucs: {res.stderr[:200]}")
 
         vocals_list = glob.glob(os.path.join(work_dir, "**", "vocals.wav"), recursive=True)
         if not vocals_list:
-            raise Exception("فشل في استخراج vocals.wav")
+            raise Exception("تعذر العثور على المسار الصوتي المستخرج")
         vocals_path = vocals_list[0]
 
-        print("💾 تصدير وحفظ المسار الصوتي النقي...")
+        task_status[video_id] = {"status": "processing", "stage": "💾 تصدير وحفظ المسار النقي..."}
         subprocess.run(["ffmpeg", "-y", "-i", vocals_path, "-b:a", "192k", cached_file], check=True)
 
+        task_status[video_id] = {"status": "ready"}
+    except Exception as e:
+        task_status[video_id] = {"status": "error", "detail": str(e)}
+    finally:
         shutil.rmtree(work_dir, ignore_errors=True)
-        print(f"✅ تمت المعالجة بنجاح للمقطع: {video_id}")
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        gc.collect()
+
+@app.get("/")
+def health():
+    return {"status": "online", "device": "CUDA" if torch.cuda.is_available() else "CPU"}
+
+@app.get("/process")
+@app.post("/process")
+def process_endpoint(url: str, background_tasks: BackgroundTasks):
+    video_id = extract_video_id(url)
+    if not video_id:
+        return JSONResponse(status_code=400, content={"detail": "رابط الفيديو غير صالح"})
+
+    cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
+    if os.path.exists(cached_file):
         return {"status": "ready", "video_id": video_id}
 
-    except Exception as e:
-        shutil.rmtree(work_dir, ignore_errors=True)
-        print(f"❌ خطأ أثناء المعالجة: {e}")
-        return JSONResponse(status_code=500, content={"detail": f"خطأ المعالجة: {str(e)}"})
+    if video_id in task_status and task_status[video_id]["status"] == "processing":
+        return {"status": "processing", "video_id": video_id}
+
+    task_status[video_id] = {"status": "processing", "stage": "بدء الجدولة السحابية..."}
+    background_tasks.add_task(background_processor, video_id, url)
+    return {"status": "processing", "video_id": video_id}
+
+@app.get("/status/{video_id}")
+def status_endpoint(video_id: str):
+    cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
+    if os.path.exists(cached_file):
+        return {"status": "ready", "video_id": video_id}
+
+    if video_id in task_status:
+        return task_status[video_id]
+
+    return JSONResponse(status_code=404, content={"status": "error", "detail": "المهمة غير مسجلة"})
 
 @app.get("/audio/{video_id}")
-async def stream(video_id: str):
+def stream_audio(video_id: str):
     file_path = os.path.join(CACHE_DIR, f"{video_id}.mp3")
     if os.path.exists(file_path):
         return FileResponse(file_path, media_type="audio/mpeg")
-    raise HTTPException(status_code=404, detail="الملف غير موجود")
+    raise HTTPException(status_code=404)
 
-# تشغيل السيرفر
 threading.Thread(target=lambda: uvicorn.run(app, host="127.0.0.1", port=8000, log_level="warning"), daemon=True).start()
 time.sleep(2)
 
-# إطلاق النفق واستخراج الرابط
 tunnel = subprocess.Popen(["cloudflared", "tunnel", "--url", "http://127.0.0.1:8000"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
 
 public_url = None
@@ -896,7 +931,7 @@ print(f"🔥 انسخ هذا الرابط وضعه في الإضافة:\n{public
 print("="*60 + "\n")</pre>
         </div>
 
-        <!-- التنبيه الهام للمستخدمين مع ضبط اتجاه المسار الإنجليزي بدقة -->
+        <!-- صندوق التنبيهات السحابية الكامل بدون أي حذف -->
         <div class="tip-box" data-i18n="cloud_tip_box">
           💡 <strong>ملاحظات هامة لتشغيل السحابي:</strong>
           <ul style="margin-right: 20px; margin-top: 6px;">
@@ -916,7 +951,6 @@ print("="*60 + "\n")</pre>
       </div>
 
       <div class="step-card">
-        <!-- 1. تحميل الملف -->
         <div style="text-align: center; margin-bottom: 25px; padding: 20px; background: rgba(0, 168, 107, 0.05); border-radius: 8px; border: 1px dashed var(--primary);">
           <h3 style="font-size: 16px; margin-bottom: 10px; color: var(--gold);" data-i18n="local_step1_box_title">الخطوة 1: تحميل ملف السيرفر المحلي جاهزاً</h3>
           <button class="btn btn-download" onclick="downloadServerFile()">
@@ -924,7 +958,6 @@ print("="*60 + "\n")</pre>
           </button>
         </div>
 
-        <!-- محددات النظام والعتاد -->
         <div class="tab-group">
           <span class="tab-label" data-i18n="local_tab_os_label">حدد نظام التشغيل لديك:</span>
           <div class="tabs">
@@ -941,7 +974,7 @@ print("="*60 + "\n")</pre>
           </div>
         </div>
 
-        <!-- صندوق متطلبات ويندوز للأجهزة الجديدة (يظهر فقط عند اختيار Windows) -->
+        <!-- صندوق متطلبات ويندوز الكامل -->
         <div class="tip-box" id="winPrereqBox" style="display: none; margin-bottom: 20px;" data-i18n="win_prereq_box">
           💡 <strong>متطلبات أساسية لأجهزة Windows (لمرة واحدة فقط قبل البدء):</strong>
           <ul style="margin-right: 20px; margin-top: 6px;">
@@ -950,7 +983,6 @@ print("="*60 + "\n")</pre>
           </ul>
         </div>
 
-        <!-- 2. التثبيت لأول مرة فقط -->
         <div style="margin-top: 25px;">
           <div class="step-title-badge">
             <span>⚙️</span> <span id="setupBadgeTitle" data-i18n="local_step2_title">الخطوة 2: التثبيت الأولي (يتم تنفيذه لمرة واحدة فقط)</span>
@@ -968,7 +1000,6 @@ print("="*60 + "\n")</pre>
           </div>
         </div>
 
-        <!-- 3. طريقة الاستخدام اليومية الروتينية -->
         <div style="margin-top: 30px;">
           <div class="step-title-badge" style="color: var(--primary-light);">
             <span>🚀</span> <span id="dailyBadgeTitle" data-i18n="local_step3_title">الخطوة 3: طريقة الاستخدام اليومية (كلما أردت استخدام الإضافة)</span>
@@ -995,7 +1026,7 @@ print("="*60 + "\n")</pre>
       </div>
     </section>
 
-    <!-- Section 3: Transparency & Uninstallation (الشفافية والحذف الكامل) -->
+    <!-- Section 3: Transparency & Uninstallation -->
     <section id="transparency">
       <div class="section-header">
         <h2 data-i18n="trans_sec_title">الشفافية وطريقة الحذف الكامل</h2>
@@ -1026,7 +1057,6 @@ print("="*60 + "\n")</pre>
           <span>🗑️</span> <span data-i18n="trans_q2_title">2. طريقة الحذف والإزالة الكاملة (Clean Uninstall)</span>
         </div>
 
-        <!-- الخطوتان 1 و 2 -->
         <ol class="instructions-list">
           <li>
             <strong data-i18n="uninst_step1_strong">الخطوة 1: إزالة الإضافة من المتصفح:</strong>
@@ -1038,7 +1068,6 @@ print("="*60 + "\n")</pre>
           </li>
         </ol>
 
-        <!-- تبويبات وأوامر الحذف لنظامي Linux و Windows -->
         <div class="tab-group" style="margin-top: 10px;">
           <div class="tabs">
             <button class="tab-btn danger active" id="btnUninstLinux" onclick="setUninstallOS('linux', this)">🐧 حذف على Linux</button>
@@ -1056,13 +1085,12 @@ print("="*60 + "\n")</pre>
           <pre id="uninstall-commands"></pre>
         </div>
 
-        <!-- الخطوة 3: الترتيب أسفل أوامر الحذف وفوق النتيجة بعد الحذف -->
         <div style="margin: 18px 0 14px 0; color: var(--text-muted); font-size: 14px;">
           <strong data-i18n="uninst_step3_strong" style="color: var(--text-main);">الخطوة 3: حذف مجلد الإضافة يدوياً:</strong>
           <span data-i18n="uninst_step3_desc">الملفات الوحيدة المتبقية على جهازك ستكون مجلد الإضافة الذي قمت بفكه من <code>naqawa.zip</code>، ويمكنك حذفه يدوياً كأي مجلد عادي في أي وقت.</span>
         </div>
 
-        <!-- تنويه بخصوص البرامج المساعدة في ويندوز (Python و Visual C++) -->
+        <!-- صندوق البرامج المساعدة في ويندوز الكامل -->
         <div class="tip-box" id="winUninstallNote" data-i18n="win_uninst_note" style="margin-bottom: 15px;">
           💡 <strong>بخصوص البرامج المساعدة الإضافية (Windows):</strong>
           <ul style="margin-right: 20px; margin-top: 6px;">
@@ -1071,7 +1099,7 @@ print("="*60 + "\n")</pre>
           </ul>
         </div>
 
-        <!-- صندوق النتيجة بعد الحذف -->
+        <!-- صندوق النتيجة بعد الحذف الكامل -->
         <div class="danger-box" data-i18n="uninst_danger_box">
           ⚠️ <strong>النتيجة بعد الحذف:</strong> يُحذف مجلد البيئة وكافة المقاطع المعالجة وملفات التخزين المؤقت وملف السيرفر نهائياً، ويعود حاسوبك نظيفاً تماماً بنسبة 100% كما كان قبل التثبيت.
         </div>
@@ -1086,7 +1114,7 @@ print("="*60 + "\n")</pre>
   </footer>
 
   <script>
-    // قاموس الترجمة الكامل (i18n Dictionary)
+    // قاموس الترجمة الكامل وغير المختصر
     const i18nData = {
       ar: {
         page_title: "نقاوة | Naqawa - فصل الموسيقى بالذكاء الاصطناعي",
@@ -1100,7 +1128,7 @@ print("="*60 + "\n")</pre>
         btn_local_guide: "💻 شرح التشغيل المحلي",
         btn_danger_guide: "🗑️ الشفافية، ماذا يحدث في جهازك؟ وطريقة الحذف الكامل",
         feat1_title: "⚡ المزامنة",
-        feat1_desc: "نظام Drift Guard  يطابق حركة الصوت و الصورة حتى عند التقديم وتغيير السرعات.",
+        feat1_desc: "نظام Drift Guard يطابق حركة الصوت و الصورة حتى عند التقديم وتغيير السرعات.",
         feat2_title: "🧠 Demucs v4 AI",
         feat2_desc: "يعتمد على خوارزميات الذكاء الاصطناعي لفصل الترددات.",
         feat3_title: "🔒 خصوصية وسرعة مطلقة",
@@ -1257,7 +1285,6 @@ print("="*60 + "\n")</pre>
     let currentHW = 'cpu';
     let currentUninstallOS = 'linux';
 
-    // مصفوفة الأوامر الموجهة دائماً لمجلد Downloads مع وضع imageio-ffmpeg في سطر منفصل وظاهر لويندوز
     const commandsData = {
       linux: {
         cpu: {
@@ -1353,18 +1380,15 @@ del local_server.py`
       }
     };
 
-    // تطبيق اللغة وتحديث كامل عناصر الصفحة
     function applyLanguage(lang) {
       currentLang = lang;
       localStorage.setItem('naqawa_lang', lang);
       document.documentElement.lang = lang;
       document.documentElement.dir = (lang === 'ar' ? 'rtl' : 'ltr');
 
-      // تحديث نص زر التبديل
       document.getElementById('langToggleBtn').innerText = (lang === 'ar' ? '🌐 English' : '🌐 العربية');
       document.title = i18nData[lang].page_title;
 
-      // تحديث جميع النصوص التي تحمل data-i18n
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (i18nData[lang][key]) {
@@ -1372,7 +1396,6 @@ del local_server.py`
         }
       });
 
-      // أزرار محددات العتاد والتبويبات
       document.getElementById('btnHWCPU').innerText = i18nData[lang].local_tab_hw_cpu;
       document.getElementById('btnHWGPU').innerText = i18nData[lang].local_tab_hw_gpu;
       document.getElementById('btnUninstLinux').innerText = i18nData[lang].uninst_tab_linux;
@@ -1382,7 +1405,6 @@ del local_server.py`
       updateUninstallCommands();
     }
 
-    // زر التبديل التفاعلي
     function toggleLanguage() {
       const nextLang = (currentLang === 'ar' ? 'en' : 'ar');
       applyLanguage(nextLang);
@@ -1395,7 +1417,6 @@ del local_server.py`
       document.getElementById('daily-title').innerText = data.dailyTitle[currentLang];
       document.getElementById('daily-commands').innerText = data.dailyCode;
 
-      // إظهار صندوق متطلبات ويندوز عند اختيار Windows فقط
       const winBox = document.getElementById('winPrereqBox');
       if (winBox) {
         winBox.style.display = (currentOS === 'windows') ? 'block' : 'none';
@@ -1446,7 +1467,7 @@ del local_server.py`
       });
     }
 
-    // دالة التحميل الديناميكية: تسحب أحدث نسخة مباشرة من مستودع GitHub تلقائياً مع نسخة احتياطية
+    // دالة التحميل مع كود السيرفر المحلي الاحتياطي المصحح بالكامل
     async function downloadServerFile() {
       const githubRawUrl = "https://raw.githubusercontent.com/saborbz/naqawa/main/local_server.py";
 
@@ -1496,14 +1517,14 @@ print("="*60)
 app = FastAPI()
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
-YTDL_OPTS = {'quiet': True, 'no_warnings': True, 'extractor_args': {'youtube': {'player_client': ['android', 'ios', 'mweb'], 'player_skip': ['webpage', 'configs']}}}
+YTDL_OPTS = {'quiet': True, 'no_warnings': True, 'extractor_args': {'youtube': {'player_client': ['tv_downgraded', 'tv', 'android', 'mweb'], 'player_skip': ['webpage', 'configs']}}}
 
 @app.get("/")
 def health(): return {"status": "online", "mode": "local", "device": DEVICE, "cache_dir": CACHE_DIR}
 
 @app.get("/process")
 @app.post("/process")
-async def process_video(url: str):
+def process_video(url: str):
     print(f"\\n🚀 [طلب محلي]: {url}")
     try:
         with yt_dlp.YoutubeDL(YTDL_OPTS) as ydl:
@@ -1527,12 +1548,12 @@ async def process_video(url: str):
         input_wav = os.path.join(work_dir, "input.wav")
         subprocess.run([FFMPEG_BIN, "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
 
-        cmd = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "-o", work_dir, input_wav]
+        cmd = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "--segment", "7", "-o", work_dir, input_wav]
         res = subprocess.run(cmd, capture_output=True, text=True)
 
         if res.returncode != 0 and DEVICE == "cuda":
             print("⚠️ تحويل تلقائي للمعالج CPU...")
-            cmd_cpu = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", "cpu", "-n", "htdemucs", "-o", work_dir, input_wav]
+            cmd_cpu = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", "cpu", "-n", "htdemucs", "--segment", "7", "-o", work_dir, input_wav]
             res = subprocess.run(cmd_cpu, capture_output=True, text=True)
 
         if res.returncode != 0:
@@ -1551,8 +1572,14 @@ async def process_video(url: str):
         shutil.rmtree(work_dir, ignore_errors=True)
         return JSONResponse(status_code=500, content={"detail": str(e)})
 
+@app.get("/status/{video_id}")
+def status(video_id: str):
+    cached_file = os.path.join(CACHE_DIR, f"{video_id}.mp3")
+    if os.path.exists(cached_file): return {"status": "ready", "video_id": video_id}
+    return JSONResponse(status_code=404, content={"status": "error", "detail": "المقطع غير موجود"})
+
 @app.get("/audio/{video_id}")
-async def stream(video_id: str):
+def stream(video_id: str):
     file_path = os.path.join(CACHE_DIR, f"{video_id}.mp3")
     if os.path.exists(file_path): return FileResponse(file_path, media_type="audio/mpeg")
     raise HTTPException(status_code=404)
@@ -1570,7 +1597,6 @@ if __name__ == "__main__":
       }
     }
 
-    // التهيئة المبدئية للغة والتبويبات
     applyLanguage(currentLang);
   </script>
 </body>
