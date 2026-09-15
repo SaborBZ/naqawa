@@ -40,7 +40,7 @@
 3. **Load Unpacked:** Enable **Developer mode** in the top corner, click **Load unpacked**, and select the extracted folder.
 
 ### ⚠️ Important Note
-Built with AI: This project was conceptualized, tested, and managed by me, with code generated and debugged with the assistance of AI tools.
+**Built with AI:** This project was conceptualized, tested, and managed by me, with code generated and debugged with the assistance of AI tools.
 
 ### ⚖️ Ethical & Legal Notice (Local Cache)
 - **Not a Downloader:** This tool is strictly a real-time in-browser filter, not an audio downloader.
@@ -76,7 +76,7 @@ Visit the official website to explore interactive setup commands and full guides
 3. **فعّل وضع المطور:** فعّل **وضع المطور (Developer mode)** من الزاوية العلوية، ثم اضغط على زر **تحميل حزمة غير مضغوطة (Load unpacked)** واختر مجلد الإضافة.
 
 ### ⚠️ ملاحظة مهمة
-مبني بمساعدة الذكاء الاصطناعي: تم وضع فكرة هذا المشروع واختباره وإدارته من قبلي، بينما تم توليد الكود وتصحيح الأخطاء البرمجية بمساعدة أدوات الذكاء الاصطناعي
+**مبني بمساعدة الذكاء الاصطناعي:** تم وضع فكرة هذا المشروع واختباره وإدارته من قبلي، بينما تم توليد الكود وتصحيح الأخطاء البرمجية بمساعدة أدوات الذكاء الاصطناعي
 
 ### ⚖️ إخلاء مسؤولية واستخدام الكاش المحلي
 - **ليست أداة تنزيل:** هذا المشروع مصمم حصرياً كمرشح صوتي لحظي داخل المتصفح، وليس برنامجاً لسحب أو حفظ المقاطع.
