@@ -1,10 +1,9 @@
-import os, sys, glob, shutil, argparse, subprocess, re, torch
-from fastapi import FastAPI, HTTPException, Request
+import os, sys, glob, shutil, argparse, subprocess, re, gc, torch
+from fastapi import FastAPI, HTTPException, Request, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, JSONResponse
 import uvicorn, yt_dlp
 
-# مفتاح التمويه وإتلاف الترويسة
 XOR_KEY = 0x5A
 HEADER_SIZE = 64
 
@@ -25,27 +24,48 @@ CACHE_DIR = os.path.abspath(args.cache_dir)
 os.makedirs(CACHE_DIR, exist_ok=True)
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
-# إنشاء ملف التنبيه النصي تلقائياً داخل المجلد
 NOTICE_FILE = os.path.join(CACHE_DIR, "README_NOTICE.txt")
 if not os.path.exists(NOTICE_FILE):
     with open(NOTICE_FILE, "w", encoding="utf-8") as f:
         f.write("""================================================================================
-                    تنبيه هام حول ملفات التخزين المؤقت (نقاوة - Naqawa)
+           تنبيه هام حول ملفات التخزين المؤقت (نقاوة - Naqawa)
+           IMPORTANT NOTICE - Naqawa Temporary Cache Files
 ================================================================================
 
+[ARABIC / العربية]
 1. الغرض التقني:
-هذا المجلد يحتوي على ملفات كاش مؤقتة بصيغة (.nq) مشفرة الترويسة ومخصصة حصرياً
-لمحرك المزامنة الفوري داخل متصفح الإنترنت أثناء مشاهدة يوتيوب.
+هذا المجلد يحتوي على ملفات كاش مؤقتة بصيغة (.nq) ذات ترويسة تالفة برمجياً،
+وهي مخصصة حصرياً لمحرك المزامنة الفوري داخل المتصفح أثناء مشاهدة يوتيوب.
 
 2. إخلاء المسؤولية والاستخدام غير المصرح به:
 - هذه الأداة لم تُصنع لتكون برنامجاً لتنزيل الصوتيات أو حفظها على القرص.
 - لا يجوز شرعاً ولا أخلاقياً محاولة فك هذه الملفات أو استخراجها واستخدامها
   خارج إطار المشاهدة المباشرة المباحة على منصة يوتيوب.
 - ترويسة هذه الملفات تالفة برمجياً ولا يمكن تشغيلها بواسطة برامج الوسائط
-  التقليدية (Media Players)، ومحاولة التلاعب بها تتعارض مع الغرض الأخلاقي للمشروع.
+  التقليدية (مثل VLC أو Media Player)، ومحاولة التلاعب بها تتعارض مع الغرض
+  الأخلاقي للمشروع.
 
 المشروع مفتوح المصدر لخدمة النفع العام وتجنب المحتوى غير المناسب، والأمانة
 مسؤولية فردية أمام الله تعالى.
+
+--------------------------------------------------------------------------------
+
+[ENGLISH / الإنجليزية]
+1. Technical Purpose:
+This directory contains temporary, header-scrambled cache files (.nq) generated
+exclusively for the real-time in-browser synchronization engine while watching
+YouTube videos.
+
+2. Disclaimer & Unauthorized Use:
+- This tool is strictly NOT designed, intended, or authorized to download, rip,
+  or store audio files for offline use outside YouTube.
+- Attempting to tamper with, reverse-engineer, or reconstruct these files for
+  offline playback violates the ethical and technical purpose of this project.
+- The binary headers of these files are deliberately corrupted; they cannot be
+  opened or played by standard media players (such as VLC or Windows Media Player).
+
+This project is open-source to provide a clean browsing experience. Personal
+integrity and ethical use remain the sole responsibility of the user.
 ================================================================================
 """)
 
@@ -64,6 +84,8 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+task_status = {}
+
 YTDL_OPTS = {
     'quiet': True,
     'no_warnings': True,
@@ -75,32 +97,94 @@ YTDL_OPTS = {
     }
 }
 
+def extract_video_id(url: str):
+    """استخراج المعرف فورياً بدون إرسال طلبات للشبكة"""
+    patterns = [
+        r'(?:v=|\/)([0-9A-Za-z_-]{11})(?:[&?]|$)',
+        r'youtu\.be\/([0-9A-Za-z_-]{11})',
+        r'embed\/([0-9A-Za-z_-]{11})',
+        r'shorts\/([0-9A-Za-z_-]{11})'
+    ]
+    for p in patterns:
+        m = re.search(p, url)
+        if m:
+            return m.group(1)
+    return None
+
 def scramble_and_save(raw_mp3_path: str, target_nq_path: str):
-    """قراءة ملف MP3 وإتلاف أول 64 بايت لحمايته من الفتح بالمشغلات"""
     with open(raw_mp3_path, "rb") as f_in:
         data = bytearray(f_in.read())
-
-    # عكس أول 64 بايت بالمفتاح لجعل الملف تالفاً لأي مشغل خارجي
     limit = min(len(data), HEADER_SIZE)
     for i in range(limit):
         data[i] ^= XOR_KEY
-
     with open(target_nq_path, "wb") as f_out:
         f_out.write(data)
 
 def read_unscrambled_chunk(file_path: str, start: int, length: int) -> bytes:
-    """إصلاح الترويسة لحظياً في الذاكرة لتغذية المتصفح دون كشف الملف على القرص"""
     with open(file_path, "rb") as f:
         f.seek(start)
         chunk = bytearray(f.read(length))
-
-    # إذا كان الجزء المطلوب يشمل أول 64 بايت نقوم بإصلاحه
     if start < HEADER_SIZE:
         overlap = min(len(chunk), HEADER_SIZE - start)
         for i in range(overlap):
             chunk[i] ^= XOR_KEY
-
     return bytes(chunk)
+
+def background_processor(video_id: str, url: str):
+    cached_file = os.path.join(CACHE_DIR, f"{video_id}.nq")
+    work_dir = os.path.join(os.path.dirname(CACHE_DIR), f"temp_{video_id}")
+    os.makedirs(work_dir, exist_ok=True)
+    raw_tmpl = os.path.join(work_dir, "raw.%(ext)s")
+
+    try:
+        task_status[video_id] = {"status": "processing", "stage": "⬇️ سحب الصوت من يوتيوب..."}
+        download_opts = {**YTDL_OPTS, 'format': 'bestaudio/best', 'outtmpl': raw_tmpl}
+        with yt_dlp.YoutubeDL(download_opts) as ydl:
+            ydl.download([url])
+
+        downloaded = glob.glob(os.path.join(work_dir, "raw.*"))
+        if not downloaded:
+            raise Exception("فشل تنزيل ملف الصوت من يوتيوب")
+        raw_file = downloaded[0]
+
+        task_status[video_id] = {"status": "processing", "stage": "🎛️ تحويل الترددات إلى WAV..."}
+        input_wav = os.path.join(work_dir, "input.wav")
+        subprocess.run([FFMPEG_BIN, "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
+
+        task_status[video_id] = {"status": "processing", "stage": "🧠 فصل الموسيقى بنموذج Demucs v4..."}
+        cmd = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "--segment", "7", "-o", work_dir, input_wav]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+
+        if res.returncode != 0 and DEVICE == "cuda":
+            task_status[video_id] = {"status": "processing", "stage": "⚠️ تحويل تلقائي للمعالجة عبر CPU..."}
+            cmd_cpu = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", "cpu", "-n", "htdemucs", "--segment", "7", "-o", work_dir, input_wav]
+            res = subprocess.run(cmd_cpu, capture_output=True, text=True)
+
+        if res.returncode != 0:
+            err_msg = res.stderr[-300:] if res.stderr else res.stdout[-300:]
+            raise Exception(f"خطأ Demucs: {err_msg.strip()}")
+
+        vocals_list = glob.glob(os.path.join(work_dir, "**", "vocals.wav"), recursive=True)
+        if not vocals_list:
+            raise Exception("تعذر العثور على مسار الصوت الناتج")
+        vocals_path = vocals_list[0]
+
+        task_status[video_id] = {"status": "processing", "stage": "🔒 إتلاف الترويسة وتجهيز الكاش..."}
+        temp_mp3 = os.path.join(work_dir, "clean.mp3")
+        subprocess.run([FFMPEG_BIN, "-y", "-i", vocals_path, "-b:a", "192k", temp_mp3], check=True)
+
+        scramble_and_save(temp_mp3, cached_file)
+        task_status[video_id] = {"status": "ready"}
+        print(f"✅ تمت معالجة المقطع بنجاح: {video_id}")
+
+    except Exception as e:
+        print(f"❌ خطأ معالجة محلي: {e}")
+        task_status[video_id] = {"status": "error", "detail": str(e)}
+    finally:
+        shutil.rmtree(work_dir, ignore_errors=True)
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        gc.collect()
 
 @app.get("/")
 def health():
@@ -108,67 +192,36 @@ def health():
 
 @app.get("/process")
 @app.post("/process")
-def process_video(url: str):
-    try:
-        with yt_dlp.YoutubeDL(YTDL_OPTS) as ydl:
-            info = ydl.extract_info(url, download=False)
-            video_id = info.get("id")
-    except Exception as e:
-        return JSONResponse(status_code=400, content={"detail": f"خطأ يوتيوب: {str(e)}"})
+def process_video(url: str, background_tasks: BackgroundTasks):
+    video_id = extract_video_id(url)
+    if not video_id:
+        return JSONResponse(status_code=400, content={"detail": "رابط الفيديو غير صالح"})
 
+    # فحص الكاش الفوري دون انتظار إنترنت
     cached_file = os.path.join(CACHE_DIR, f"{video_id}.nq")
     if os.path.exists(cached_file):
         return {"status": "ready", "video_id": video_id}
 
-    work_dir = os.path.join(os.path.dirname(CACHE_DIR), f"temp_{video_id}")
-    os.makedirs(work_dir, exist_ok=True)
-    try:
-        raw_tmpl = os.path.join(work_dir, "raw.%(ext)s")
-        download_opts = {**YTDL_OPTS, 'format': 'bestaudio/best', 'outtmpl': raw_tmpl}
-        with yt_dlp.YoutubeDL(download_opts) as ydl:
-            ydl.download([url])
+    if video_id in task_status and task_status[video_id]["status"] == "processing":
+        return {"status": "processing", "video_id": video_id}
 
-        raw_file = glob.glob(os.path.join(work_dir, "raw.*"))[0]
-        input_wav = os.path.join(work_dir, "input.wav")
-        subprocess.run([FFMPEG_BIN, "-y", "-i", raw_file, "-vn", "-ar", "44100", "-ac", "2", input_wav], check=True)
-
-        cmd = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", DEVICE, "-n", "htdemucs", "--segment", "7", "-o", work_dir, input_wav]
-        res = subprocess.run(cmd, capture_output=True, text=True)
-
-        if res.returncode != 0 and DEVICE == "cuda":
-            cmd_cpu = [sys.executable, "-m", "demucs.separate", "--two-stems", "vocals", "-d", "cpu", "-n", "htdemucs", "--segment", "7", "-o", work_dir, input_wav]
-            res = subprocess.run(cmd_cpu, capture_output=True, text=True)
-
-        if res.returncode != 0:
-            raise Exception(f"خطأ Demucs: {res.stderr[:200]}")
-
-        vocals_list = glob.glob(os.path.join(work_dir, "**", "vocals.wav"), recursive=True)
-        if not vocals_list:
-            raise Exception("تعذر العثور على المسار الناتج")
-        vocals_path = vocals_list[0]
-
-        temp_mp3 = os.path.join(work_dir, "clean.mp3")
-        subprocess.run([FFMPEG_BIN, "-y", "-i", vocals_path, "-b:a", "192k", temp_mp3], check=True)
-
-        # إتلاف الترويسة وحفظه بصيغة .nq
-        scramble_and_save(temp_mp3, cached_file)
-
-        shutil.rmtree(work_dir, ignore_errors=True)
-        return {"status": "ready", "video_id": video_id}
-    except Exception as e:
-        shutil.rmtree(work_dir, ignore_errors=True)
-        return JSONResponse(status_code=500, content={"detail": str(e)})
+    task_status[video_id] = {"status": "processing", "stage": "بدء جدولة المعالجة المحلية..."}
+    background_tasks.add_task(background_processor, video_id, url)
+    return {"status": "processing", "video_id": video_id}
 
 @app.get("/status/{video_id}")
 def status(video_id: str):
     cached_file = os.path.join(CACHE_DIR, f"{video_id}.nq")
     if os.path.exists(cached_file):
         return {"status": "ready", "video_id": video_id}
-    return JSONResponse(status_code=404, content={"status": "error", "detail": "المقطع غير موجود"})
+
+    if video_id in task_status:
+        return task_status[video_id]
+
+    return JSONResponse(status_code=404, content={"status": "error", "detail": "المقطع غير مسجل"})
 
 @app.get("/audio/{video_id}")
 def stream(video_id: str, request: Request):
-    """بث الصوت للمتصفح مع فك إتلاف الترويسة ودعم التقديم/الترجيع اللحظي"""
     file_path = os.path.join(CACHE_DIR, f"{video_id}.nq")
     if not os.path.exists(file_path):
         raise HTTPException(status_code=404, detail="الملف غير موجود")
@@ -176,7 +229,6 @@ def stream(video_id: str, request: Request):
     file_size = os.path.getsize(file_path)
     range_header = request.headers.get("range")
 
-    # دعم HTTP Range Requests للتقديم والترجيع اللحظي
     if range_header:
         match = re.search(r"bytes=(\d+)-(\d*)", range_header)
         if match:
@@ -194,7 +246,6 @@ def stream(video_id: str, request: Request):
             }
             return Response(chunk_data, status_code=206, headers=headers)
 
-    # بث الملف كاملاً
     data = read_unscrambled_chunk(file_path, 0, file_size)
     headers = {
         "Accept-Ranges": "bytes",
