@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://naqawa.pages.dev/sitemap.xml
